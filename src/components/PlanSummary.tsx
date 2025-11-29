@@ -203,22 +203,14 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+          <div className="flex justify-center mt-8">
             <Button
               variant="outline"
               onClick={handleDownload}
-              className="flex-1 border-2 hover:bg-secondary transition-smooth"
+              className="border-2 hover:bg-secondary transition-smooth px-8"
             >
               <Download className="w-4 h-4 mr-2" />
               Download Plan
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleShare}
-              className="flex-1 border-2 hover:bg-secondary transition-smooth"
-            >
-              <Share2 className="w-4 h-4 mr-2" />
-              Share Plan
             </Button>
           </div>
         </div>
