@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SelectedOption } from "@/types/plan";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 
 interface PlanSummaryProps {
   selectedOptions: SelectedOption[];
@@ -11,10 +12,113 @@ interface PlanSummaryProps {
 }
 
 export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryProps) {
+  const { toast } = useToast();
   const subtotal = selectedOptions.reduce((sum, opt) => sum + opt.price, 0);
   const discountAmount = (subtotal * discount) / 100;
   const total = subtotal - discountAmount;
   const advancePayment = total * 0.2;
+
+  const handleDownload = () => {
+    const receiptContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Zboost Plan Receipt</title>
+          <style>
+            body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+            h1 { color: #22c55e; text-align: center; }
+            .header { text-align: center; margin-bottom: 30px; }
+            .item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
+            .total { font-size: 24px; font-weight: bold; margin-top: 20px; padding: 20px; background: #f9f9f9; }
+            .advance { background: #22c55e; color: white; padding: 20px; text-align: center; margin-top: 20px; border-radius: 8px; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>Zboost</h1>
+            <p>WE ARE THE BRAND BUILDING BRAND.</p>
+            <p>Custom Plan Receipt</p>
+          </div>
+          ${selectedOptions.map(opt => `
+            <div class="item">
+              <div>
+                <strong>${opt.name}</strong>
+                ${opt.quantity ? `<br><small>${opt.quantity.toLocaleString("en-IN")} views</small>` : ''}
+              </div>
+              <div>₹${opt.price.toLocaleString("en-IN")}</div>
+            </div>
+          `).join('')}
+          <div class="item" style="margin-top: 20px;">
+            <div>Subtotal</div>
+            <div>₹${subtotal.toLocaleString("en-IN")}</div>
+          </div>
+          ${discount > 0 ? `
+          <div class="item" style="color: #22c55e;">
+            <div>Discount (${discount}%)</div>
+            <div>-₹${discountAmount.toLocaleString("en-IN")}</div>
+          </div>
+          ` : ''}
+          <div class="total">
+            <div style="display: flex; justify-content: space-between;">
+              <span>Total</span>
+              <span>₹${total.toLocaleString("en-IN")}</span>
+            </div>
+          </div>
+          <div class="advance">
+            <h2>Advance Payment Required</h2>
+            <h1>₹${advancePayment.toLocaleString("en-IN")}</h1>
+            <p>Pay 20% of the total amount as advance to get started</p>
+          </div>
+        </body>
+      </html>
+    `;
+    
+    const blob = new Blob([receiptContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `zboost-plan-receipt-${Date.now()}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Receipt Downloaded",
+      description: "Your plan receipt has been saved to your device.",
+    });
+  };
+
+  const handleShare = async () => {
+    const shareText = `Zboost Custom Plan\n\nWE ARE THE BRAND BUILDING BRAND.\n\n${selectedOptions.map(opt => 
+      `✓ ${opt.name}${opt.quantity ? ` (${opt.quantity.toLocaleString("en-IN")} views)` : ''} - ₹${opt.price.toLocaleString("en-IN")}`
+    ).join('\n')}\n\nSubtotal: ₹${subtotal.toLocaleString("en-IN")}${discount > 0 ? `\nDiscount (${discount}%): -₹${discountAmount.toLocaleString("en-IN")}` : ''}\n\nTotal: ₹${total.toLocaleString("en-IN")}\n\nAdvance Payment (20%): ₹${advancePayment.toLocaleString("en-IN")}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Zboost Custom Plan',
+          text: shareText,
+        });
+        toast({
+          title: "Plan Shared",
+          description: "Your plan has been shared successfully.",
+        });
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Error sharing:', error);
+        }
+      }
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(shareText);
+      toast({
+        title: "Copied to Clipboard",
+        description: "Share link copied! You can now paste it in WhatsApp, email, or anywhere.",
+      });
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -102,6 +206,7 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <Button
               variant="outline"
+              onClick={handleDownload}
               className="flex-1 border-2 hover:bg-secondary transition-smooth"
             >
               <Download className="w-4 h-4 mr-2" />
@@ -109,13 +214,11 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
             </Button>
             <Button
               variant="outline"
+              onClick={handleShare}
               className="flex-1 border-2 hover:bg-secondary transition-smooth"
             >
               <Share2 className="w-4 h-4 mr-2" />
               Share Plan
-            </Button>
-            <Button className="flex-1 gradient-accent text-accent-foreground font-semibold shadow-elegant hover:shadow-strong transition-smooth hover:scale-105">
-              Proceed to Payment
             </Button>
           </div>
         </div>
