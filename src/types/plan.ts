@@ -3,6 +3,11 @@ export interface PlanOption {
   name: string;
   price: number;
   description?: string;
+  isQuantityBased?: boolean;
+  pricePerUnit?: number;
+  minQuantity?: number;
+  maxQuantity?: number;
+  quantityLabel?: string;
 }
 
 export interface PlanSection {
@@ -16,6 +21,7 @@ export interface SelectedOption {
   optionId: string;
   name: string;
   price: number;
+  quantity?: number;
 }
 
 export interface CustomInput {

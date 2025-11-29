@@ -51,6 +51,11 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
                 </div>
                 <div>
                   <h3 className="font-medium">{option.name}</h3>
+                  {option.quantity && (
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {option.quantity.toLocaleString("en-IN")} views
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="font-semibold whitespace-nowrap">
