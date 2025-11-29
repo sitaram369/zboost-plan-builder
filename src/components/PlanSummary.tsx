@@ -26,18 +26,21 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
           <meta charset="utf-8">
           <title>Zboost Plan Receipt</title>
           <style>
-            body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
-            h1 { color: #22c55e; text-align: center; }
+            body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; color: #000; }
+            h1 { color: #22c55e; text-align: center; font-size: 36px; margin: 10px 0; }
             .header { text-align: center; margin-bottom: 30px; }
             .item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
             .total { font-size: 24px; font-weight: bold; margin-top: 20px; padding: 20px; background: #f9f9f9; }
-            .advance { background: #22c55e; color: white; padding: 20px; text-align: center; margin-top: 20px; border-radius: 8px; }
+            .advance { background: #22c55e; color: #ffffff; padding: 30px; text-align: center; margin-top: 30px; border-radius: 8px; }
+            .advance h2 { color: #ffffff; font-size: 24px; margin: 0 0 15px 0; font-weight: bold; }
+            .advance h1 { color: #ffffff; font-size: 48px; margin: 15px 0; font-weight: bold; }
+            .advance p { color: #ffffff; font-size: 16px; margin: 15px 0 0 0; }
           </style>
         </head>
         <body>
           <div class="header">
             <h1>Zboost</h1>
-            <p>WE ARE THE BRAND BUILDING BRAND.</p>
+            <p><strong>WE ARE THE BRAND BUILDING BRAND.</strong></p>
             <p>Custom Plan Receipt</p>
           </div>
           ${selectedOptions.map(opt => `
@@ -46,17 +49,17 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
                 <strong>${opt.name}</strong>
                 ${opt.quantity ? `<br><small>${opt.quantity.toLocaleString("en-IN")} views</small>` : ''}
               </div>
-              <div>₹${opt.price.toLocaleString("en-IN")}</div>
+              <div><strong>₹${opt.price.toLocaleString("en-IN")}</strong></div>
             </div>
           `).join('')}
           <div class="item" style="margin-top: 20px;">
-            <div>Subtotal</div>
-            <div>₹${subtotal.toLocaleString("en-IN")}</div>
+            <div><strong>Subtotal</strong></div>
+            <div><strong>₹${subtotal.toLocaleString("en-IN")}</strong></div>
           </div>
           ${discount > 0 ? `
           <div class="item" style="color: #22c55e;">
-            <div>Discount (${discount}%)</div>
-            <div>-₹${discountAmount.toLocaleString("en-IN")}</div>
+            <div><strong>Discount (${discount}%)</strong></div>
+            <div><strong>-₹${discountAmount.toLocaleString("en-IN")}</strong></div>
           </div>
           ` : ''}
           <div class="total">
