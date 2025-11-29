@@ -38,6 +38,17 @@ export const planSections: PlanSection[] = [
       { id: "boost-pack-4", name: "Package of 4 Boosts", price: 4000 },
       { id: "whatsapp-broadcast", name: "WhatsApp Broadcast", price: 5000, description: "per month" },
       { id: "email-marketing", name: "Email Marketing", price: 7000, description: "per month" },
+      { 
+        id: "whatsapp-status", 
+        name: "WhatsApp Status Marketing Software (U.S.P)", 
+        price: 1000, 
+        isQuantityBased: true,
+        pricePerUnit: 1,
+        minQuantity: 1000,
+        maxQuantity: 100000,
+        quantityLabel: "views",
+        description: "₹1 per view"
+      },
     ],
   },
   {

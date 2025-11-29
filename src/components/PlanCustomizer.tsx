@@ -5,16 +5,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import { planSections } from "@/data/planData";
 import { SelectedOption } from "@/types/plan";
 import { PlanSummary } from "./PlanSummary";
 
 export function PlanCustomizer() {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [discount, setDiscount] = useState<number>(0);
   const [showSummary, setShowSummary] = useState(false);
 
-  const handleOptionToggle = (sectionId: string, optionId: string, name: string, price: number) => {
+  const handleOptionToggle = (
+    sectionId: string, 
+    optionId: string, 
+    name: string, 
+    price: number, 
+    isQuantityBased?: boolean,
+    quantity?: number
+  ) => {
     setSelectedOptions((prev) => {
       const exists = prev.find(
         (opt) => opt.sectionId === sectionId && opt.optionId === optionId
@@ -25,8 +34,35 @@ export function PlanCustomizer() {
           (opt) => !(opt.sectionId === sectionId && opt.optionId === optionId)
         );
       } else {
-        return [...prev, { sectionId, optionId, name, price }];
+        return [...prev, { 
+          sectionId, 
+          optionId, 
+          name, 
+          price: isQuantityBased && quantity ? quantity : price,
+          quantity: isQuantityBased ? quantity : undefined
+        }];
       }
+    });
+  };
+
+  const handleQuantityChange = (sectionId: string, optionId: string, quantity: number) => {
+    const key = `${sectionId}-${optionId}`;
+    setQuantities(prev => ({ ...prev, [key]: quantity }));
+    
+    // Update the price in selectedOptions if the option is already selected
+    setSelectedOptions((prev) => {
+      const exists = prev.find(
+        (opt) => opt.sectionId === sectionId && opt.optionId === optionId
+      );
+      
+      if (exists) {
+        return prev.map(opt => 
+          opt.sectionId === sectionId && opt.optionId === optionId
+            ? { ...opt, price: quantity, quantity }
+            : opt
+        );
+      }
+      return prev;
     });
   };
 
@@ -79,49 +115,100 @@ export function PlanCustomizer() {
           <div className="space-y-4">
             {section.options.map((option) => {
               const isSelected = isOptionSelected(section.id, option.id);
+              const quantityKey = `${section.id}-${option.id}`;
+              const currentQuantity = quantities[quantityKey] || (option.minQuantity || 1000);
+              const calculatedPrice = option.isQuantityBased && option.pricePerUnit 
+                ? currentQuantity * option.pricePerUnit 
+                : option.price;
+              
               return (
                 <div
                   key={option.id}
-                  className={`flex items-start space-x-4 p-4 rounded-lg border-2 transition-smooth cursor-pointer hover:bg-secondary/30 ${
+                  className={`p-4 rounded-lg border-2 transition-smooth ${
                     isSelected
                       ? "border-accent bg-accent/5"
                       : "border-border/50 hover:border-border"
                   }`}
-                  onClick={() =>
-                    handleOptionToggle(section.id, option.id, option.name, option.price)
-                  }
                 >
-                  <div className="flex items-center justify-center mt-0.5">
-                    <Checkbox
-                      checked={isSelected}
-                      onCheckedChange={() =>
-                        handleOptionToggle(section.id, option.id, option.name, option.price)
-                      }
-                      className="data-[state=checked]:bg-accent data-[state=checked]:border-accent"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-4">
-                      <Label
-                        htmlFor={option.id}
-                        className="text-base font-medium cursor-pointer"
-                      >
-                        {option.name}
-                      </Label>
-                      <span className="font-semibold whitespace-nowrap">
-                        {option.price > 0 ? `₹${option.price.toLocaleString("en-IN")}` : "Custom"}
-                      </span>
+                  <div
+                    className="flex items-start space-x-4 cursor-pointer"
+                    onClick={() =>
+                      handleOptionToggle(
+                        section.id, 
+                        option.id, 
+                        option.name, 
+                        calculatedPrice,
+                        option.isQuantityBased,
+                        currentQuantity
+                      )
+                    }
+                  >
+                    <div className="flex items-center justify-center mt-0.5">
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={() =>
+                          handleOptionToggle(
+                            section.id, 
+                            option.id, 
+                            option.name, 
+                            calculatedPrice,
+                            option.isQuantityBased,
+                            currentQuantity
+                          )
+                        }
+                        className="data-[state=checked]:bg-accent data-[state=checked]:border-accent"
+                      />
                     </div>
-                    {option.description && (
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {option.description}
-                      </p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-4">
+                        <Label
+                          htmlFor={option.id}
+                          className="text-base font-medium cursor-pointer"
+                        >
+                          {option.name}
+                        </Label>
+                        <span className="font-semibold whitespace-nowrap">
+                          {option.price > 0 || option.isQuantityBased 
+                            ? `₹${calculatedPrice.toLocaleString("en-IN")}` 
+                            : "Custom"}
+                        </span>
+                      </div>
+                      {option.description && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {option.description}
+                        </p>
+                      )}
+                    </div>
+                    {isSelected && (
+                      <div className="flex items-center justify-center">
+                        <div className="w-6 h-6 rounded-full bg-accent text-accent-foreground flex items-center justify-center">
+                          <Check className="w-4 h-4" />
+                        </div>
+                      </div>
                     )}
                   </div>
-                  {isSelected && (
-                    <div className="flex items-center justify-center">
-                      <div className="w-6 h-6 rounded-full bg-accent text-accent-foreground flex items-center justify-center">
-                        <Check className="w-4 h-4" />
+                  
+                  {option.isQuantityBased && (
+                    <div className="mt-4 pl-10 space-y-3" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center justify-between text-sm">
+                        <Label className="font-medium">
+                          Number of {option.quantityLabel || "units"}
+                        </Label>
+                        <span className="font-semibold text-accent">
+                          {currentQuantity.toLocaleString("en-IN")} {option.quantityLabel}
+                        </span>
+                      </div>
+                      <Slider
+                        value={[currentQuantity]}
+                        onValueChange={(value) => handleQuantityChange(section.id, option.id, value[0])}
+                        min={option.minQuantity || 1000}
+                        max={option.maxQuantity || 100000}
+                        step={1000}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>{(option.minQuantity || 1000).toLocaleString("en-IN")}</span>
+                        <span>{(option.maxQuantity || 100000).toLocaleString("en-IN")}</span>
                       </div>
                     </div>
                   )}
