@@ -221,23 +221,25 @@ export function PlanCustomizer() {
 
       <Card className="p-6 shadow-elegant sticky bottom-4 border-border/50 backdrop-blur-sm bg-card/95">
         <div className="flex flex-col md:flex-row gap-6 items-start md:items-end">
-          <div className="flex-1 space-y-2">
-            <Label htmlFor="discount" className="text-base font-medium">
-              Discount (Max 20%)
-            </Label>
-            <div className="flex items-center gap-2">
-              <Input
-                id="discount"
-                type="number"
-                min="0"
-                max="20"
-                step="0.5"
-                value={discount}
-                onChange={(e) => handleDiscountChange(e.target.value)}
-                className="max-w-[200px]"
-                placeholder="0"
-              />
-              <span className="font-medium">%</span>
+          <div className="flex-1 space-y-3">
+            <div className="flex justify-between items-center">
+              <Label htmlFor="discount" className="text-base font-medium">
+                Discount
+              </Label>
+              <span className="text-lg font-semibold text-accent">{discount}%</span>
+            </div>
+            <Slider
+              id="discount"
+              min={0}
+              max={20}
+              step={0.5}
+              value={[discount]}
+              onValueChange={(value) => handleDiscountChange(value[0].toString())}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>0%</span>
+              <span>20%</span>
             </div>
           </div>
           <div className="flex-1 text-right">
