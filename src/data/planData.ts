@@ -25,7 +25,7 @@ export const planSections: PlanSection[] = [
     options: [
       { id: "ad-pack-4", name: "Pack of 4 Ads (Up to 30 sec each)", price: 10000 },
       { id: "ad-15sec", name: "Single Ad Video (15 sec)", price: 3000 },
-      { id: "ad-30sec", name: "Single Ad Video (30 sec)", price: 3000 },
+      { id: "ad-30sec", name: "Single Ad Video (30 sec)", price: 3500 },
       { id: "ad-above-30", name: "Single Ad Video (Above 30 sec)", price: 5000 },
       { id: "short-movie", name: "Short Movie (Up to 5 minutes)", price: 10000 },
     ],
