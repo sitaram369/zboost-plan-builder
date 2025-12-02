@@ -34,7 +34,7 @@ export const planSections: PlanSection[] = [
     id: "digital-reach",
     title: "Digital Reach",
     options: [
-      { id: "one-week-boost", name: "One-week Boost (10,000 reach)", price: 1000 },
+      { id: "one-week-boost", name: "One-week Boost (1,000 reach)", price: 1000 },
       { id: "boost-pack-4", name: "Package of 4 Boosts", price: 4000 },
       { id: "whatsapp-broadcast", name: "WhatsApp Broadcast", price: 5000, description: "per month" },
       { id: "email-marketing", name: "Email Marketing", price: 7000, description: "per month" },
