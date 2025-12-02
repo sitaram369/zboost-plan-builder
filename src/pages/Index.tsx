@@ -3,10 +3,8 @@ import { PlanCustomizer } from "@/components/PlanCustomizer";
 import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border/50 sticky top-0 bg-background/95 backdrop-blur-md z-50 shadow-elegant">
         <div className="container mx-auto px-4 py-4">
@@ -61,13 +59,11 @@ const Index = () => {
       <footer className="border-t border-border/50 bg-secondary/20 mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center text-sm text-muted-foreground">
-            <p>© 2024 Zboost. All rights reserved.</p>
+            <p>© 2025 Zboost. All rights reserved.</p>
             <p className="mt-2">AI Marketing & Automation Agency</p>
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
