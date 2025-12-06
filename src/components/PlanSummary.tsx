@@ -73,6 +73,14 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
             <h1>₹${advancePayment.toLocaleString("en-IN")}</h1>
             <p>Pay 20% of the total amount as advance to get started</p>
           </div>
+          <div class="terms" style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #22c55e;">
+            <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold;">Terms & Conditions</h3>
+            <ol style="margin: 0; padding-left: 20px; line-height: 1.8;">
+              <li>Only THREE changes are accepted in the VIDEO, WEBSITE, APP part within 3 HRS of delivery.</li>
+              <li>NO REFUND in any case and extra money will be charged to make any changes after the time period of the work gets completed.</li>
+              <li>There will be a small watermark on every AD VIDEO made by us.</li>
+            </ol>
+          </div>
         </body>
       </html>
     `;
