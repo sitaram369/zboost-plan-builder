@@ -191,7 +191,7 @@ export function PlanCustomizer() {
                     )}
                   </div>
                   
-                  {option.isQuantityBased && (
+                  {option.disabled && (
                     <div className="mt-4 pl-10" onClick={(e) => e.stopPropagation()}>
                       <span className="text-sm font-medium text-muted-foreground italic">
                         Coming Soon

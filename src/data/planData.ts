@@ -56,10 +56,10 @@ export const planSections: PlanSection[] = [
     id: "automation",
     title: "AI Automation Services",
     options: [
-      { id: "lead-automation", name: "Lead Automation (Auto follow-up, WhatsApp Flow, Email)", price: 0, description: "Custom pricing" },
-      { id: "crm-setup", name: "CRM Setup (Pipeline, Tagging, Automation)", price: 0, description: "Custom pricing" },
-      { id: "workflow-automation", name: "Workflow Automation (Chatbot, Appointments, Payments)", price: 0, description: "Custom pricing" },
-      { id: "maintenance", name: "Monthly Automation Maintenance", price: 0, description: "Custom pricing" },
+      { id: "lead-automation", name: "Lead Automation (Auto follow-up, WhatsApp Flow, Email)", price: 0, description: "Custom pricing", disabled: true },
+      { id: "crm-setup", name: "CRM Setup (Pipeline, Tagging, Automation)", price: 0, description: "Custom pricing", disabled: true },
+      { id: "workflow-automation", name: "Workflow Automation (Chatbot, Appointments, Payments)", price: 0, description: "Custom pricing", disabled: true },
+      { id: "maintenance", name: "Monthly Automation Maintenance", price: 0, description: "Custom pricing", disabled: true },
     ],
   },
 ];
