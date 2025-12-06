@@ -124,12 +124,11 @@ const Auth = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="signup-phone">Phone Number</Label>
+                      <Label htmlFor="signup-phone">Phone Number (Optional)</Label>
                       <Input
                         id="signup-phone"
                         type="tel"
                         placeholder="+91 98765 43210"
-                        required
                       />
                     </div>
                   </div>
