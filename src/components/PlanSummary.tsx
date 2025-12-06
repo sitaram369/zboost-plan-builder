@@ -136,10 +136,7 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
 
       <Card className="p-8 shadow-strong border-border/50">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-display font-bold mb-2">Your Custom Plan</h1>
-          <p className="text-muted-foreground text-lg">
-            We are the brand building brand.
-          </p>
+          <h1 className="text-4xl font-display font-bold">Your Custom Plan</h1>
         </div>
 
         <Separator className="my-8" />
