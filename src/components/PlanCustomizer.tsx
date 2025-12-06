@@ -182,13 +182,15 @@ export function PlanCustomizer() {
                         </p>
                       )}
                     </div>
-                    {isSelected && (
-                      <div className="flex items-center justify-center">
-                        <div className="w-6 h-6 rounded-full bg-accent text-accent-foreground flex items-center justify-center">
-                          <Check className="w-4 h-4" />
-                        </div>
+                    <div className="flex items-center justify-center">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 ${
+                        isSelected 
+                          ? "bg-accent text-accent-foreground scale-100" 
+                          : "border-2 border-border hover:border-accent/50 scale-90"
+                      }`}>
+                        {isSelected && <Check className="w-4 h-4 animate-scale-in" />}
                       </div>
-                    )}
+                    </div>
                   </div>
                   
                   {option.disabled && (
