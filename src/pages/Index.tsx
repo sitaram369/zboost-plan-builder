@@ -38,9 +38,8 @@ const Index = () => {
             <div className="inline-block mb-4 px-4 py-2 rounded-full bg-accent/10 border border-accent/20">
               <span className="text-accent font-semibold text-sm">We are the brand building brand.</span>
             </div>
-            <h2 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight">
-              Build Your Custom
-            </h2>
+            <h2 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight">Build Your Custom
+marketing plan</h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Choose from our comprehensive services and create a tailored plan that fits your business needs perfectly.
             </p>
