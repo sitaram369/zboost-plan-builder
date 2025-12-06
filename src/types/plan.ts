@@ -8,6 +8,7 @@ export interface PlanOption {
   minQuantity?: number;
   maxQuantity?: number;
   quantityLabel?: string;
+  disabled?: boolean;
 }
 
 export interface PlanSection {

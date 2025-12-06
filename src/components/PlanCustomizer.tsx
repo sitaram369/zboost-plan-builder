@@ -125,15 +125,17 @@ export function PlanCustomizer() {
                 <div
                   key={option.id}
                   className={`p-4 rounded-lg border-2 transition-smooth ${
-                    isSelected
-                      ? "border-accent bg-accent/5"
-                      : "border-border/50 hover:border-border"
+                    option.disabled
+                      ? "border-border/30 opacity-60"
+                      : isSelected
+                        ? "border-accent bg-accent/5"
+                        : "border-border/50 hover:border-border"
                   }`}
                 >
                   <div
-                    className="flex items-start space-x-4 cursor-pointer"
+                    className={`flex items-start space-x-4 ${option.disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
                     onClick={() =>
-                      handleOptionToggle(
+                      !option.disabled && handleOptionToggle(
                         section.id, 
                         option.id, 
                         option.name, 
@@ -146,8 +148,9 @@ export function PlanCustomizer() {
                     <div className="flex items-center justify-center mt-0.5">
                       <Checkbox
                         checked={isSelected}
+                        disabled={option.disabled}
                         onCheckedChange={() =>
-                          handleOptionToggle(
+                          !option.disabled && handleOptionToggle(
                             section.id, 
                             option.id, 
                             option.name, 
