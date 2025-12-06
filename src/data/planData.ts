@@ -47,7 +47,8 @@ export const planSections: PlanSection[] = [
         minQuantity: 1000,
         maxQuantity: 100000,
         quantityLabel: "views",
-        description: "₹1 per view"
+        description: "₹1 per view",
+        disabled: true
       },
     ],
   },
