@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -17,24 +18,102 @@ const Auth = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate authentication
-    setTimeout(() => {
-      toast.success("Welcome back to Zboost!");
-      navigate("/");
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("signin-email") as string;
+    const password = formData.get("signin-password") as string;
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+
+    if (error) {
+      toast.error(error.message);
       setIsLoading(false);
-    }, 1500);
+      return;
+    }
+
+    toast.success("Welcome back to Zboost!");
+    navigate("/");
+    setIsLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate registration
-    setTimeout(() => {
-      toast.success("Account created successfully!");
-      navigate("/");
+    const formData = new FormData(e.currentTarget);
+    const fullName = formData.get("signup-name") as string;
+    const phone = formData.get("signup-phone") as string;
+    const email = formData.get("signup-email") as string;
+    const companyName = formData.get("signup-company") as string;
+    const companyType = formData.get("signup-company-type") as string;
+    const industry = formData.get("signup-industry") as string;
+    const password = formData.get("signup-password") as string;
+    const confirmPassword = formData.get("signup-confirm") as string;
+
+    // Validation
+    if (!fullName.trim() || !email.trim() || !companyName.trim() || !companyType || !industry) {
+      toast.error("Please fill in all required fields");
       setIsLoading(false);
-    }, 1500);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      setIsLoading(false);
+      return;
+    }
+
+    const redirectUrl = `${window.location.origin}/`;
+
+    // Sign up the user
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+      },
+    });
+
+    if (authError) {
+      toast.error(authError.message);
+      setIsLoading(false);
+      return;
+    }
+
+    if (!authData.user) {
+      toast.error("Failed to create account");
+      setIsLoading(false);
+      return;
+    }
+
+    // Create the profile
+    const { error: profileError } = await supabase.from("profiles").insert({
+      user_id: authData.user.id,
+      full_name: fullName.trim(),
+      phone: phone.trim() || null,
+      company_name: companyName.trim(),
+      company_type: companyType,
+      industry: industry,
+    });
+
+    if (profileError) {
+      console.error("Profile creation error:", profileError);
+      toast.error("Account created but failed to save profile. Please contact support.");
+      setIsLoading(false);
+      return;
+    }
+
+    toast.success("Account created successfully!");
+    navigate("/");
+    setIsLoading(false);
   };
 
   return (
@@ -87,6 +166,7 @@ const Auth = () => {
                     <Label htmlFor="signin-email">Email</Label>
                     <Input
                       id="signin-email"
+                      name="signin-email"
                       type="email"
                       placeholder="your@email.com"
                       required
@@ -96,6 +176,7 @@ const Auth = () => {
                     <Label htmlFor="signin-password">Password</Label>
                     <Input
                       id="signin-password"
+                      name="signin-password"
                       type="password"
                       placeholder="••••••••"
                       required
@@ -118,15 +199,17 @@ const Auth = () => {
                       <Label htmlFor="signup-name">Full Name</Label>
                       <Input
                         id="signup-name"
+                        name="signup-name"
                         type="text"
                         placeholder="John Doe"
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="signup-phone">Phone Number (Optional)</Label>
+                      <Label htmlFor="signup-phone">Phone (Optional)</Label>
                       <Input
                         id="signup-phone"
+                        name="signup-phone"
                         type="tel"
                         placeholder="+91 98765 43210"
                       />
@@ -136,6 +219,7 @@ const Auth = () => {
                     <Label htmlFor="signup-email">Email</Label>
                     <Input
                       id="signup-email"
+                      name="signup-email"
                       type="email"
                       placeholder="your@email.com"
                       required
@@ -146,6 +230,7 @@ const Auth = () => {
                       <Label htmlFor="signup-company">Company Name</Label>
                       <Input
                         id="signup-company"
+                        name="signup-company"
                         type="text"
                         placeholder="Your Company"
                         required
@@ -155,6 +240,7 @@ const Auth = () => {
                       <Label htmlFor="signup-company-type">Company Type</Label>
                       <select
                         id="signup-company-type"
+                        name="signup-company-type"
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         required
                       >
@@ -173,6 +259,7 @@ const Auth = () => {
                     <Label htmlFor="signup-industry">Industry</Label>
                     <select
                       id="signup-industry"
+                      name="signup-industry"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       required
                     >
@@ -196,6 +283,7 @@ const Auth = () => {
                       <Label htmlFor="signup-password">Password</Label>
                       <Input
                         id="signup-password"
+                        name="signup-password"
                         type="password"
                         placeholder="••••••••"
                         required
@@ -206,6 +294,7 @@ const Auth = () => {
                       <Label htmlFor="signup-confirm">Confirm Password</Label>
                       <Input
                         id="signup-confirm"
+                        name="signup-confirm"
                         type="password"
                         placeholder="••••••••"
                         required
