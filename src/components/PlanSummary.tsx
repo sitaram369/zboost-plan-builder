@@ -135,12 +135,6 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
       </Button>
 
       <Card className="p-8 shadow-strong border-border/50">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-display font-bold">Your Custom Plan</h1>
-        </div>
-
-        <Separator className="my-8" />
-
         <div className="space-y-6">
           {selectedOptions.map((option) => (
             <div
