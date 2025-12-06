@@ -189,27 +189,10 @@ export function PlanCustomizer() {
                   </div>
                   
                   {option.isQuantityBased && (
-                    <div className="mt-4 pl-10 space-y-3" onClick={(e) => e.stopPropagation()}>
-                      <div className="flex items-center justify-between text-sm">
-                        <Label className="font-medium">
-                          Number of {option.quantityLabel || "units"}
-                        </Label>
-                        <span className="font-semibold text-accent">
-                          {currentQuantity.toLocaleString("en-IN")} {option.quantityLabel}
-                        </span>
-                      </div>
-                      <Slider
-                        value={[currentQuantity]}
-                        onValueChange={(value) => handleQuantityChange(section.id, option.id, value[0])}
-                        min={option.minQuantity || 1000}
-                        max={option.maxQuantity || 100000}
-                        step={1000}
-                        className="w-full"
-                      />
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>{(option.minQuantity || 1000).toLocaleString("en-IN")}</span>
-                        <span>{(option.maxQuantity || 100000).toLocaleString("en-IN")}</span>
-                      </div>
+                    <div className="mt-4 pl-10" onClick={(e) => e.stopPropagation()}>
+                      <span className="text-sm font-medium text-muted-foreground italic">
+                        Coming Soon
+                      </span>
                     </div>
                   )}
                 </div>
