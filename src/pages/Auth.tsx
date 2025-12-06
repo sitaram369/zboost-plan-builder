@@ -191,14 +191,6 @@ const Auth = () => {
                       <option value="other">Other</option>
                     </select>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-website">Website (Optional)</Label>
-                    <Input
-                      id="signup-website"
-                      type="url"
-                      placeholder="https://yourcompany.com"
-                    />
-                  </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="signup-password">Password</Label>
