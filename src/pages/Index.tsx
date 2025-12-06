@@ -40,8 +40,6 @@ const Index = () => {
             </div>
             <h2 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight">
               Build Your Custom
-              <br />
-              <span className="gradient-primary bg-clip-text text-transparent">Marketing Plan</span>
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Choose from our comprehensive services and create a tailored plan that fits your business needs perfectly.
