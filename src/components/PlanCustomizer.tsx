@@ -124,13 +124,13 @@ export function PlanCustomizer() {
               return (
                 <div
                   key={option.id}
-                  className={`p-4 rounded-lg border-2 transition-smooth ${
+                  className={`p-4 rounded-lg border-2 transition-all duration-300 ease-out ${
                     option.disabled
                       ? "border-border/30 opacity-60"
                       : isSelected
-                        ? "border-accent bg-accent/5"
-                        : "border-border/50 hover:border-border"
-                  }`}
+                        ? "border-accent bg-accent/5 scale-[1.01] shadow-md"
+                        : "border-border/50 hover:border-border hover:scale-[1.005]"
+                  } ${!option.disabled && "active:scale-[0.99]"}`}
                 >
                   <div
                     className={`flex items-start space-x-4 ${option.disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
@@ -159,7 +159,7 @@ export function PlanCustomizer() {
                             currentQuantity
                           )
                         }
-                        className="data-[state=checked]:bg-accent data-[state=checked]:border-accent"
+                        className="data-[state=checked]:bg-accent data-[state=checked]:border-accent transition-all duration-200"
                       />
                     </div>
                     <div className="flex-1 min-w-0">
