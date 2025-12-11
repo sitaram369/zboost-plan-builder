@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { Volume2, VolumeX } from "lucide-react";
 
 interface IntroVideoProps {
   onComplete: () => void;
@@ -7,6 +8,7 @@ interface IntroVideoProps {
 
 const IntroVideo = ({ onComplete }: IntroVideoProps) => {
   const [isVisible, setIsVisible] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleVideoEnd = () => {
@@ -22,6 +24,13 @@ const IntroVideo = ({ onComplete }: IntroVideoProps) => {
     setTimeout(onComplete, 300);
   };
 
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
   return (
     <div
       className={`fixed inset-0 z-50 bg-black flex items-center justify-center transition-opacity duration-300 ${
@@ -31,7 +40,6 @@ const IntroVideo = ({ onComplete }: IntroVideoProps) => {
       <video
         ref={videoRef}
         autoPlay
-        muted
         playsInline
         onEnded={handleVideoEnd}
         className="w-full h-full object-contain"
@@ -39,13 +47,23 @@ const IntroVideo = ({ onComplete }: IntroVideoProps) => {
         <source src="/videos/intro.mp4" type="video/mp4" />
       </video>
       
-      <Button
-        onClick={handleSkip}
-        variant="outline"
-        className="absolute bottom-8 right-8 bg-background/20 border-border/50 text-foreground hover:bg-background/40"
-      >
-        Skip Intro
-      </Button>
+      <div className="absolute bottom-8 right-8 flex gap-3">
+        <Button
+          onClick={toggleMute}
+          variant="outline"
+          size="icon"
+          className="bg-background/20 border-border/50 text-white hover:bg-background/40"
+        >
+          {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+        </Button>
+        <Button
+          onClick={handleSkip}
+          variant="outline"
+          className="bg-background/20 border-border/50 text-white hover:bg-background/40"
+        >
+          Skip Intro
+        </Button>
+      </div>
     </div>
   );
 };
