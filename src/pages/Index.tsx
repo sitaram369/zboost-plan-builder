@@ -7,25 +7,30 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
-
 const Index = () => {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
-
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const {
+      data: {
+        subscription
+      }
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
     });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({
+      data: {
+        session
+      }
+    }) => {
       setUser(session?.user ?? null);
     });
-
     return () => subscription.unsubscribe();
   }, []);
-
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
+    const {
+      error
+    } = await supabase.auth.signOut();
     if (error) {
       toast.error("Error signing out");
     } else {
@@ -42,25 +47,21 @@ const Index = () => {
                 <span className="text-primary-foreground font-bold text-xl font-display">Z</span>
               </div>
               <div>
-                <h1 className="text-2xl font-display font-bold tracking-tight">Zboost</h1>
+                <h1 className="text-2xl font-display font-bold tracking-tight">AIZboostr</h1>
                 <p className="text-xs text-muted-foreground">AI Marketing & Automation</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <ThemeToggle />
-              {user ? (
-                <Button variant="outline" className="border-2 hover:bg-secondary transition-smooth" onClick={handleSignOut}>
+              {user ? <Button variant="outline" className="border-2 hover:bg-secondary transition-smooth" onClick={handleSignOut}>
                   <LogOut className="w-4 h-4 mr-2" />
                   Sign Out
-                </Button>
-              ) : (
-                <Link to="/auth">
+                </Button> : <Link to="/auth">
                   <Button variant="outline" className="border-2 hover:bg-secondary transition-smooth">
                     <LogIn className="w-4 h-4 mr-2" />
                     Sign In
                   </Button>
-                </Link>
-              )}
+                </Link>}
             </div>
           </div>
         </div>
