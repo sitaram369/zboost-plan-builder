@@ -8,7 +8,7 @@ interface IntroVideoProps {
 
 const IntroVideo = ({ onComplete }: IntroVideoProps) => {
   const [isVisible, setIsVisible] = useState(true);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleVideoEnd = () => {
@@ -40,6 +40,7 @@ const IntroVideo = ({ onComplete }: IntroVideoProps) => {
       <video
         ref={videoRef}
         autoPlay
+        muted
         playsInline
         onEnded={handleVideoEnd}
         className="w-full h-full object-contain"
@@ -47,12 +48,15 @@ const IntroVideo = ({ onComplete }: IntroVideoProps) => {
         <source src="/videos/intro.mp4" type="video/mp4" />
       </video>
       
-      <div className="absolute bottom-8 right-8 flex gap-3">
+      <div className="absolute bottom-8 right-8 flex gap-3 items-center">
+        {isMuted && (
+          <span className="text-white text-sm animate-pulse mr-2">🔊 Click for Sound</span>
+        )}
         <Button
           onClick={toggleMute}
           variant="outline"
           size="icon"
-          className="bg-background/20 border-border/50 text-white hover:bg-background/40"
+          className={`bg-background/20 border-border/50 text-white hover:bg-background/40 ${isMuted ? 'animate-pulse ring-2 ring-green-500' : ''}`}
         >
           {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
         </Button>
