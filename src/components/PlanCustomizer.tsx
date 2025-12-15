@@ -188,6 +188,11 @@ export function PlanCustomizer() {
                           {option.description}
                         </p>
                       )}
+                      {option.excludeFromDiscount && (
+                        <span className="inline-flex items-center text-xs text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded mt-1">
+                          No discount applies
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center justify-center">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 ${
