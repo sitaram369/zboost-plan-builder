@@ -22,7 +22,8 @@ export function PlanCustomizer() {
     name: string, 
     price: number, 
     isQuantityBased?: boolean,
-    quantity?: number
+    quantity?: number,
+    excludeFromDiscount?: boolean
   ) => {
     setSelectedOptions((prev) => {
       const exists = prev.find(
@@ -39,7 +40,8 @@ export function PlanCustomizer() {
           optionId, 
           name, 
           price: isQuantityBased && quantity ? quantity : price,
-          quantity: isQuantityBased ? quantity : undefined
+          quantity: isQuantityBased ? quantity : undefined,
+          excludeFromDiscount
         }];
       }
     });
@@ -81,7 +83,10 @@ export function PlanCustomizer() {
 
   const calculateTotal = () => {
     const subtotal = selectedOptions.reduce((sum, opt) => sum + opt.price, 0);
-    const discountAmount = (subtotal * discount) / 100;
+    const discountableAmount = selectedOptions
+      .filter(opt => !opt.excludeFromDiscount)
+      .reduce((sum, opt) => sum + opt.price, 0);
+    const discountAmount = (discountableAmount * discount) / 100;
     return subtotal - discountAmount;
   };
 
@@ -141,7 +146,8 @@ export function PlanCustomizer() {
                         option.name, 
                         calculatedPrice,
                         option.isQuantityBased,
-                        currentQuantity
+                        currentQuantity,
+                        option.excludeFromDiscount
                       )
                     }
                   >
@@ -156,7 +162,8 @@ export function PlanCustomizer() {
                             option.name, 
                             calculatedPrice,
                             option.isQuantityBased,
-                            currentQuantity
+                            currentQuantity,
+                            option.excludeFromDiscount
                           )
                         }
                         className="data-[state=checked]:bg-accent data-[state=checked]:border-accent transition-all duration-200"
