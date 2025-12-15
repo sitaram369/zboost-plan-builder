@@ -5,7 +5,7 @@ export const planSections: PlanSection[] = [
     id: "digital-footprint",
     title: "Digital Footprint Setup",
     options: [
-      { id: "instagram", name: "Instagram Setup", price: 500 },
+      { id: "instagram", name: "Instagram Setup", price: 1000 },
       { id: "facebook", name: "Facebook Setup", price: 500 },
       { id: "linkedin", name: "LinkedIn Setup", price: 500 },
       { id: "twitter", name: "Twitter/X Setup", price: 500 },
