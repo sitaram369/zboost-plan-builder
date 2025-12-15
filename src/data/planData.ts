@@ -12,9 +12,9 @@ export const planSections: PlanSection[] = [
       { id: "youtube", name: "YouTube Setup", price: 500 },
       { id: "gmb", name: "Google My Business Setup", price: 500 },
       { id: "basic-landing", name: "Basic Landing Page", price: 5000 },
-      { id: "landing-domain", name: "Landing Page + Domain", price: 7500 },
+      { id: "landing-domain", name: "Landing Page + Domain", price: 7500, excludeFromDiscount: true },
       { id: "advanced-website", name: "Advanced Website", price: 15000 },
-      { id: "domain-hosting", name: "Domain + Hosting", price: 5000 },
+      { id: "domain-hosting", name: "Domain + Hosting", price: 5000, excludeFromDiscount: true },
       { id: "mid-app", name: "Mid-Level App", price: 20000 },
       { id: "advanced-app", name: "Advanced App", price: 25000 },
     ],
@@ -34,8 +34,8 @@ export const planSections: PlanSection[] = [
     id: "digital-reach",
     title: "Digital Reach",
     options: [
-      { id: "one-week-boost", name: "One-week Boost (1,000 reach)", price: 1000 },
-      { id: "boost-pack-4", name: "Package of 4 Boosts", price: 4000 },
+      { id: "one-week-boost", name: "One-week Boost (1,000 reach)", price: 1000, excludeFromDiscount: true },
+      { id: "boost-pack-4", name: "Package of 4 Boosts", price: 4000, excludeFromDiscount: true },
       { id: "whatsapp-broadcast", name: "WhatsApp Broadcast", price: 5000, description: "per month" },
       { id: "email-marketing", name: "Email Marketing", price: 7000, description: "per month" },
       { 

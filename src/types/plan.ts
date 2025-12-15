@@ -9,6 +9,7 @@ export interface PlanOption {
   maxQuantity?: number;
   quantityLabel?: string;
   disabled?: boolean;
+  excludeFromDiscount?: boolean;
 }
 
 export interface PlanSection {
@@ -23,6 +24,7 @@ export interface SelectedOption {
   name: string;
   price: number;
   quantity?: number;
+  excludeFromDiscount?: boolean;
 }
 
 export interface CustomInput {

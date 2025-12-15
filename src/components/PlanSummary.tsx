@@ -14,7 +14,10 @@ interface PlanSummaryProps {
 export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryProps) {
   const { toast } = useToast();
   const subtotal = selectedOptions.reduce((sum, opt) => sum + opt.price, 0);
-  const discountAmount = (subtotal * discount) / 100;
+  const discountableAmount = selectedOptions
+    .filter(opt => !opt.excludeFromDiscount)
+    .reduce((sum, opt) => sum + opt.price, 0);
+  const discountAmount = (discountableAmount * discount) / 100;
   const total = subtotal - discountAmount;
   const advancePayment = total * 0.2;
 
