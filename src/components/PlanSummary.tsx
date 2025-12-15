@@ -184,7 +184,7 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
 
           {discount > 0 && (
             <div className="flex justify-between text-lg text-accent">
-              <span>Discount ({discount}%)</span>
+              <span>Discount ({discount}% on ₹{discountableAmount.toLocaleString("en-IN")})</span>
               <span className="font-semibold">-₹{discountAmount.toLocaleString("en-IN")}</span>
             </div>
           )}
