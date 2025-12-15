@@ -177,11 +177,18 @@ export function PlanCustomizer() {
                         >
                           {option.name}
                         </Label>
-                        <span className="font-semibold whitespace-nowrap">
-                          {option.price > 0 || option.isQuantityBased 
-                            ? `₹${calculatedPrice.toLocaleString("en-IN")}` 
-                            : "Custom"}
-                        </span>
+                        <div className="text-right">
+                          <span className="font-semibold whitespace-nowrap">
+                            {option.price > 0 || option.isQuantityBased 
+                              ? `₹${calculatedPrice.toLocaleString("en-IN")}` 
+                              : "Custom"}
+                          </span>
+                          {!option.excludeFromDiscount && discount > 0 && calculatedPrice > 0 && (
+                            <div className="text-xs text-accent">
+                              Save ₹{((calculatedPrice * discount) / 100).toLocaleString("en-IN")}
+                            </div>
+                          )}
+                        </div>
                       </div>
                       {option.description && (
                         <p className="text-sm text-muted-foreground mt-1">
