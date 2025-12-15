@@ -27,7 +27,7 @@ export const planSections: PlanSection[] = [
       { id: "ad-15sec", name: "Single Ad Video (15 sec)", price: 3000 },
       { id: "ad-30sec", name: "Single Ad Video (30 sec)", price: 3500 },
       { id: "ad-above-30", name: "Single Ad Video (Above 30 sec)", price: 5000 },
-      { id: "short-movie", name: "Short Movie (Up to 5 minutes)", price: 10000 },
+      { id: "short-movie", name: "Short Movie (Up to 5 minutes)", price: 25000 },
     ],
   },
   {
@@ -35,7 +35,7 @@ export const planSections: PlanSection[] = [
     title: "Digital Reach",
     options: [
       { id: "one-week-boost", name: "One-week Boost (1,000 reach)", price: 1000, excludeFromDiscount: true },
-      { id: "boost-pack-4", name: "Package of 4 Boosts", price: 4000, excludeFromDiscount: true },
+      { id: "boost-pack-4", name: "Package of 4 Boosts", price: 3200, excludeFromDiscount: true },
       { id: "whatsapp-broadcast", name: "WhatsApp Broadcast", price: 5000, description: "per month" },
       { id: "email-marketing", name: "Email Marketing", price: 7000, description: "per month" },
       { 
