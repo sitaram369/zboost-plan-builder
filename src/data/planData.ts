@@ -14,7 +14,7 @@ export const planSections: PlanSection[] = [
       { id: "basic-landing", name: "Basic Landing Page", price: 5000 },
       { id: "landing-domain", name: "Landing Page + Domain", price: 7500, excludeFromDiscount: true },
       { id: "advanced-website", name: "Advanced Website", price: 18000 },
-      { id: "domain-hosting", name: "Domain + Hosting", price: 5000, excludeFromDiscount: true },
+      { id: "domain-hosting", name: "Domain + Hosting", price: 7000, excludeFromDiscount: true },
       { id: "mid-app", name: "Mid-Level App", price: 20000 },
       { id: "advanced-app", name: "Advanced App", price: 25000 },
     ],
