@@ -173,24 +173,24 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
             onValueChange={(v) => setHasBrandAssets(v === "yes")} 
             className="grid grid-cols-1 md:grid-cols-2 gap-2"
           >
-            <div
+            <label
+              htmlFor="brand-yes"
               className={`flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                 hasBrandAssets === true ? "border-accent bg-accent/5" : "border-border/50 hover:border-border"
               }`}
-              onClick={() => setHasBrandAssets(true)}
             >
               <RadioGroupItem value="yes" id="brand-yes" />
-              <Label htmlFor="brand-yes" className="cursor-pointer flex-1 text-sm">Yes (logo, website, social pages)</Label>
-            </div>
-            <div
+              <span className="cursor-pointer flex-1 text-sm">Yes (logo, website, social pages)</span>
+            </label>
+            <label
+              htmlFor="brand-no"
               className={`flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                 hasBrandAssets === false ? "border-accent bg-accent/5" : "border-border/50 hover:border-border"
               }`}
-              onClick={() => setHasBrandAssets(false)}
             >
               <RadioGroupItem value="no" id="brand-no" />
-              <Label htmlFor="brand-no" className="cursor-pointer flex-1 text-sm">No, starting from scratch</Label>
-            </div>
+              <span className="cursor-pointer flex-1 text-sm">No, starting from scratch</span>
+            </label>
           </RadioGroup>
         </div>
 
