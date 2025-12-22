@@ -72,7 +72,7 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
 
   const handleServiceToggle = (serviceId: string) => {
     setInterestedServices((prev) =>
-      prev.includes(serviceId) ? prev.filter((s) => s !== serviceId) : [...prev, serviceId]
+      prev.includes(serviceId) ? prev.filter((s) => s !== serviceId) : [...prev, serviceId],
     );
   };
 
@@ -130,17 +130,22 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
         {/* Q1: Business Stage */}
         <div className="space-y-3">
           <Label className="text-base font-semibold">1. What best describes your current stage?</Label>
-          <RadioGroup value={businessStage} onValueChange={setBusinessStage} className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <RadioGroup
+            value={businessStage}
+            onValueChange={setBusinessStage}
+            className="grid grid-cols-1 md:grid-cols-2 gap-2"
+          >
             {businessStages.map((stage) => (
               <div
                 key={stage.id}
                 className={`flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                   businessStage === stage.id ? "border-accent bg-accent/5" : "border-border/50 hover:border-border"
                 }`}
-                onClick={() => setBusinessStage(stage.id)}
               >
                 <RadioGroupItem value={stage.id} id={stage.id} />
-                <Label htmlFor={stage.id} className="cursor-pointer flex-1 text-sm">{stage.label}</Label>
+                <Label htmlFor={stage.id} className="cursor-pointer flex-1 text-sm">
+                  {stage.label}
+                </Label>
               </div>
             ))}
           </RadioGroup>
@@ -154,11 +159,15 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
               <div
                 key={service.id}
                 className={`flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                  interestedServices.includes(service.id) ? "border-accent bg-accent/5" : "border-border/50 hover:border-border"
+                  interestedServices.includes(service.id)
+                    ? "border-accent bg-accent/5"
+                    : "border-border/50 hover:border-border"
                 }`}
-                onClick={() => handleServiceToggle(service.id)}
               >
-                <Checkbox checked={interestedServices.includes(service.id)} onCheckedChange={() => handleServiceToggle(service.id)} />
+                <Checkbox
+                  checked={interestedServices.includes(service.id)}
+                  onCheckedChange={() => handleServiceToggle(service.id)}
+                />
                 <Label className="cursor-pointer flex-1 text-sm">{service.label}</Label>
               </div>
             ))}
@@ -168,9 +177,9 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
         {/* Q3: Brand Assets */}
         <div className="space-y-3">
           <Label className="text-base font-semibold">3. Do you have existing brand assets?</Label>
-          <RadioGroup 
-            value={hasBrandAssets === true ? "yes" : hasBrandAssets === false ? "no" : ""} 
-            onValueChange={(v) => setHasBrandAssets(v === "yes")} 
+          <RadioGroup
+            value={hasBrandAssets === true ? "yes" : hasBrandAssets === false ? "no" : ""}
+            onValueChange={(v) => setHasBrandAssets(v === "yes")}
             className="grid grid-cols-1 md:grid-cols-2 gap-2"
           >
             <label
@@ -197,17 +206,24 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
         {/* Q4: Challenge */}
         <div className="space-y-3">
           <Label className="text-base font-semibold">4. What's your biggest challenge right now?</Label>
-          <RadioGroup value={biggestChallenge} onValueChange={setBiggestChallenge} className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <RadioGroup
+            value={biggestChallenge}
+            onValueChange={setBiggestChallenge}
+            className="grid grid-cols-1 md:grid-cols-2 gap-2"
+          >
             {challenges.map((challenge) => (
               <div
                 key={challenge.id}
                 className={`flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                  biggestChallenge === challenge.id ? "border-accent bg-accent/5" : "border-border/50 hover:border-border"
+                  biggestChallenge === challenge.id
+                    ? "border-accent bg-accent/5"
+                    : "border-border/50 hover:border-border"
                 }`}
-                onClick={() => setBiggestChallenge(challenge.id)}
               >
                 <RadioGroupItem value={challenge.id} id={`ch-${challenge.id}`} />
-                <Label htmlFor={`ch-${challenge.id}`} className="cursor-pointer flex-1 text-sm">{challenge.label}</Label>
+                <Label htmlFor={`ch-${challenge.id}`} className="cursor-pointer flex-1 text-sm">
+                  {challenge.label}
+                </Label>
               </div>
             ))}
           </RadioGroup>
@@ -216,17 +232,22 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
         {/* Q5: Target Audience */}
         <div className="space-y-3">
           <Label className="text-base font-semibold">5. Who is your target audience?</Label>
-          <RadioGroup value={targetAudience} onValueChange={setTargetAudience} className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <RadioGroup
+            value={targetAudience}
+            onValueChange={setTargetAudience}
+            className="grid grid-cols-1 md:grid-cols-2 gap-2"
+          >
             {targetAudiences.map((audience) => (
               <div
                 key={audience.id}
                 className={`flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                   targetAudience === audience.id ? "border-accent bg-accent/5" : "border-border/50 hover:border-border"
                 }`}
-                onClick={() => setTargetAudience(audience.id)}
               >
                 <RadioGroupItem value={audience.id} id={`ta-${audience.id}`} />
-                <Label htmlFor={`ta-${audience.id}`} className="cursor-pointer flex-1 text-sm">{audience.label}</Label>
+                <Label htmlFor={`ta-${audience.id}`} className="cursor-pointer flex-1 text-sm">
+                  {audience.label}
+                </Label>
               </div>
             ))}
           </RadioGroup>
@@ -235,17 +256,22 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
         {/* Q6: Budget */}
         <div className="space-y-3">
           <Label className="text-base font-semibold">6. What's your monthly marketing budget?</Label>
-          <RadioGroup value={monthlyBudget} onValueChange={setMonthlyBudget} className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <RadioGroup
+            value={monthlyBudget}
+            onValueChange={setMonthlyBudget}
+            className="grid grid-cols-1 md:grid-cols-2 gap-2"
+          >
             {budgetRanges.map((budget) => (
               <div
                 key={budget.id}
                 className={`flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                   monthlyBudget === budget.id ? "border-accent bg-accent/5" : "border-border/50 hover:border-border"
                 }`}
-                onClick={() => setMonthlyBudget(budget.id)}
               >
                 <RadioGroupItem value={budget.id} id={`bg-${budget.id}`} />
-                <Label htmlFor={`bg-${budget.id}`} className="cursor-pointer flex-1 text-sm">{budget.label}</Label>
+                <Label htmlFor={`bg-${budget.id}`} className="cursor-pointer flex-1 text-sm">
+                  {budget.label}
+                </Label>
               </div>
             ))}
           </RadioGroup>
@@ -261,10 +287,11 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
                 className={`flex items-center space-x-2 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                   timeline === t.id ? "border-accent bg-accent/5" : "border-border/50 hover:border-border"
                 }`}
-                onClick={() => setTimeline(t.id)}
               >
                 <RadioGroupItem value={t.id} id={`tl-${t.id}`} />
-                <Label htmlFor={`tl-${t.id}`} className="cursor-pointer text-sm">{t.label}</Label>
+                <Label htmlFor={`tl-${t.id}`} className="cursor-pointer text-sm">
+                  {t.label}
+                </Label>
               </div>
             ))}
           </RadioGroup>
