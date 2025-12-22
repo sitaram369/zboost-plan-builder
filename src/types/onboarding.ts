@@ -1,5 +1,6 @@
 export interface BusinessDetails {
   businessName: string;
+  brandDetails: string;
   phone: string;
   email: string;
   website?: string;
@@ -10,6 +11,9 @@ export interface SurveyAnswers {
   interestedServices: string[];
   hasBrandAssets: boolean;
   biggestChallenge: string;
+  targetAudience: string;
+  monthlyBudget: string;
+  timeline: string;
 }
 
 export interface OnboardingData {

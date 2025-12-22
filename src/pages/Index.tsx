@@ -1,43 +1,46 @@
+import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { PlanCustomizer } from "@/components/PlanCustomizer";
 import { Button } from "@/components/ui/button";
-import { LogIn, LogOut } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { LogIn, LogOut, Rocket } from "lucide-react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
+import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
+
 const Index = () => {
   const [user, setUser] = useState<User | null>(null);
-  const navigate = useNavigate();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
   useEffect(() => {
-    const {
-      data: {
-        subscription
-      }
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
     });
-    supabase.auth.getSession().then(({
-      data: {
-        session
-      }
-    }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
     });
+
+    // Check for step param from OAuth redirect
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("step")) {
+      setShowOnboarding(true);
+    }
+
     return () => subscription.unsubscribe();
   }, []);
+
   const handleSignOut = async () => {
-    const {
-      error
-    } = await supabase.auth.signOut();
-    if (error) {
-      toast.error("Error signing out");
-    } else {
-      toast.success("Signed out successfully");
-    }
+    const { error } = await supabase.auth.signOut();
+    if (error) toast.error("Error signing out");
+    else toast.success("Signed out successfully");
   };
-  return <div className="min-h-screen bg-background">
+
+  if (showOnboarding) {
+    return <OnboardingFlow onClose={() => setShowOnboarding(false)} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border/50 sticky top-0 bg-background/95 backdrop-blur-md z-50 shadow-elegant">
         <div className="container mx-auto px-4 py-4">
@@ -53,15 +56,19 @@ const Index = () => {
             </div>
             <div className="flex items-center gap-4">
               <ThemeToggle />
-              {user ? <Button variant="outline" className="border-2 hover:bg-secondary transition-smooth" onClick={handleSignOut}>
+              {user ? (
+                <Button variant="outline" className="border-2" onClick={handleSignOut}>
                   <LogOut className="w-4 h-4 mr-2" />
                   Sign Out
-                </Button> : <Link to="/auth">
-                  <Button variant="outline" className="border-2 hover:bg-secondary transition-smooth">
+                </Button>
+              ) : (
+                <Link to="/auth">
+                  <Button variant="outline" className="border-2">
                     <LogIn className="w-4 h-4 mr-2" />
                     Sign In
                   </Button>
-                </Link>}
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -74,19 +81,22 @@ const Index = () => {
             <div className="inline-block mb-4 px-4 py-2 rounded-full bg-accent/10 border border-accent/20">
               <span className="text-accent font-semibold text-sm">We are the brand building brand.</span>
             </div>
-            <h2 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight">Build Your Custom
-marketing plan</h2>
+            <h2 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight">
+              Build Your Custom Marketing Plan
+            </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Choose from our comprehensive services and create a tailored plan that fits your business needs perfectly.
             </p>
+            <Button
+              onClick={() => setShowOnboarding(true)}
+              className="gradient-accent text-accent-foreground font-semibold px-12 py-8 text-xl shadow-strong hover:shadow-elegant transition-smooth hover:scale-105"
+            >
+              <Rocket className="w-6 h-6 mr-3" />
+              Get Started Now
+            </Button>
           </div>
         </div>
       </section>
-
-      {/* Plan Customizer */}
-      <main className="container mx-auto px-4 py-12 md:py-16">
-        <PlanCustomizer />
-      </main>
 
       {/* Footer */}
       <footer className="border-t border-border/50 bg-secondary/20 mt-20">
@@ -97,6 +107,8 @@ marketing plan</h2>
           </div>
         </div>
       </footer>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
