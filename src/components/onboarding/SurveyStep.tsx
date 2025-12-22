@@ -168,15 +168,19 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
         {/* Q3: Brand Assets */}
         <div className="space-y-3">
           <Label className="text-base font-semibold">3. Do you have existing brand assets?</Label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <RadioGroup 
+            value={hasBrandAssets === true ? "yes" : hasBrandAssets === false ? "no" : ""} 
+            onValueChange={(v) => setHasBrandAssets(v === "yes")} 
+            className="grid grid-cols-1 md:grid-cols-2 gap-2"
+          >
             <div
               className={`flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                 hasBrandAssets === true ? "border-accent bg-accent/5" : "border-border/50 hover:border-border"
               }`}
               onClick={() => setHasBrandAssets(true)}
             >
-              <RadioGroupItem checked={hasBrandAssets === true} value="yes" />
-              <Label className="cursor-pointer flex-1 text-sm">Yes (logo, website, social pages)</Label>
+              <RadioGroupItem value="yes" id="brand-yes" />
+              <Label htmlFor="brand-yes" className="cursor-pointer flex-1 text-sm">Yes (logo, website, social pages)</Label>
             </div>
             <div
               className={`flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
@@ -184,10 +188,10 @@ export function SurveyStep({ onNext, onBack, initialData }: SurveyStepProps) {
               }`}
               onClick={() => setHasBrandAssets(false)}
             >
-              <RadioGroupItem checked={hasBrandAssets === false} value="no" />
-              <Label className="cursor-pointer flex-1 text-sm">No, starting from scratch</Label>
+              <RadioGroupItem value="no" id="brand-no" />
+              <Label htmlFor="brand-no" className="cursor-pointer flex-1 text-sm">No, starting from scratch</Label>
             </div>
-          </div>
+          </RadioGroup>
         </div>
 
         {/* Q4: Challenge */}
