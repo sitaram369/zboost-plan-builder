@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { Check } from "lucide-react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -9,6 +8,14 @@ import { planSections } from "@/data/planData";
 import { SelectedOption } from "@/types/plan";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface PlanSelectionStepProps {
   onNext: (selectedOptions: SelectedOption[], discount: number) => void;
@@ -17,10 +24,21 @@ interface PlanSelectionStepProps {
   initialDiscount?: number;
 }
 
+interface PendingSelection {
+  sectionId: string;
+  optionId: string;
+  name: string;
+  price: number;
+  excludeFromDiscount?: boolean;
+}
+
 export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initialDiscount = 0 }: PlanSelectionStepProps) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>(initialOptions);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [discount, setDiscount] = useState<number>(Math.min(initialDiscount, 10));
+  const [languageDialogOpen, setLanguageDialogOpen] = useState(false);
+  const [pendingSelection, setPendingSelection] = useState<PendingSelection | null>(null);
+  const [languageSelections, setLanguageSelections] = useState<Record<string, boolean>>({});
 
   const handleOptionToggle = (
     sectionId: string,
@@ -29,23 +47,59 @@ export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initial
     price: number,
     isQuantityBased?: boolean,
     quantity?: number,
-    excludeFromDiscount?: boolean
+    excludeFromDiscount?: boolean,
+    hasLanguageOption?: boolean
   ) => {
-    setSelectedOptions((prev) => {
-      const exists = prev.find((opt) => opt.sectionId === sectionId && opt.optionId === optionId);
-      if (exists) {
-        return prev.filter((opt) => !(opt.sectionId === sectionId && opt.optionId === optionId));
-      } else {
-        return [...prev, {
-          sectionId,
-          optionId,
-          name,
-          price: isQuantityBased && quantity ? quantity : price,
-          quantity: isQuantityBased ? quantity : undefined,
-          excludeFromDiscount,
-        }];
-      }
-    });
+    const exists = selectedOptions.find((opt) => opt.sectionId === sectionId && opt.optionId === optionId);
+    
+    if (exists) {
+      // Deselecting - remove the option
+      setSelectedOptions((prev) => 
+        prev.filter((opt) => !(opt.sectionId === sectionId && opt.optionId === optionId))
+      );
+      // Clean up language selection
+      setLanguageSelections((prev) => {
+        const newSelections = { ...prev };
+        delete newSelections[`${sectionId}-${optionId}`];
+        return newSelections;
+      });
+    } else if (hasLanguageOption) {
+      // Show language option dialog for ads
+      setPendingSelection({ sectionId, optionId, name, price, excludeFromDiscount });
+      setLanguageDialogOpen(true);
+    } else {
+      // Normal selection
+      setSelectedOptions((prev) => [...prev, {
+        sectionId,
+        optionId,
+        name,
+        price: isQuantityBased && quantity ? quantity : price,
+        quantity: isQuantityBased ? quantity : undefined,
+        excludeFromDiscount,
+      }]);
+    }
+  };
+
+  const handleLanguageConfirm = (addSecondLanguage: boolean) => {
+    if (!pendingSelection) return;
+
+    const key = `${pendingSelection.sectionId}-${pendingSelection.optionId}`;
+    const extraPrice = addSecondLanguage ? 500 : 0;
+    const finalName = addSecondLanguage 
+      ? `${pendingSelection.name} (+ 2nd Language)` 
+      : pendingSelection.name;
+
+    setLanguageSelections((prev) => ({ ...prev, [key]: addSecondLanguage }));
+    setSelectedOptions((prev) => [...prev, {
+      sectionId: pendingSelection.sectionId,
+      optionId: pendingSelection.optionId,
+      name: finalName,
+      price: pendingSelection.price + extraPrice,
+      excludeFromDiscount: pendingSelection.excludeFromDiscount,
+    }]);
+
+    setLanguageDialogOpen(false);
+    setPendingSelection(null);
   };
 
   const handleQuantityChange = (sectionId: string, optionId: string, quantity: number) => {
@@ -112,7 +166,16 @@ export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initial
                   } ${!option.disabled && "cursor-pointer"}`}
                   onClick={() =>
                     !option.disabled &&
-                    handleOptionToggle(section.id, option.id, option.name, calculatedPrice, option.isQuantityBased, currentQuantity, option.excludeFromDiscount)
+                    handleOptionToggle(
+                      section.id, 
+                      option.id, 
+                      option.name, 
+                      calculatedPrice, 
+                      option.isQuantityBased, 
+                      currentQuantity, 
+                      option.excludeFromDiscount,
+                      option.hasLanguageOption
+                    )
                   }
                 >
                   <div className="flex items-center justify-between">
@@ -139,6 +202,34 @@ export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initial
           </div>
         </Card>
       ))}
+
+      {/* Language Option Dialog */}
+      <Dialog open={languageDialogOpen} onOpenChange={setLanguageDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add Second Language?</DialogTitle>
+            <DialogDescription>
+              One language is included free with your ad. Would you like to add a second language for ₹500?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground">
+              <strong>Selected:</strong> {pendingSelection?.name}
+            </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              <strong>Base Price:</strong> ₹{pendingSelection?.price.toLocaleString("en-IN")}
+            </p>
+          </div>
+          <DialogFooter className="flex gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => handleLanguageConfirm(false)}>
+              No, 1 Language Only
+            </Button>
+            <Button onClick={() => handleLanguageConfirm(true)} className="gradient-accent">
+              Yes, Add 2nd Language (+₹500)
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Sticky Footer */}
       <Card className="p-6 shadow-elegant sticky bottom-4 border-border/50 backdrop-blur-sm bg-card/95">
