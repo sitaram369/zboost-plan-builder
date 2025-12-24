@@ -50,7 +50,7 @@ const Index = () => {
                 <span className="text-primary-foreground font-bold text-xl font-display">Z</span>
               </div>
               <div>
-                <h1 className="text-2xl font-display font-bold tracking-tight">AIZboostr</h1>
+                <h1 className="text-2xl font-display font-bold tracking-tight">AIZBOOSTR</h1>
                 <p className="text-xs text-muted-foreground">AI Marketing & Automation</p>
               </div>
             </div>
@@ -102,7 +102,7 @@ const Index = () => {
       <footer className="border-t border-border/50 bg-secondary/20 mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center text-sm text-muted-foreground">
-            <p>© 2025 Zboost. All rights reserved.</p>
+            <p>© 2025 AIZBOOSTR. All rights reserved.</p>
             <p className="mt-2">AI Marketing & Automation Agency</p>
           </div>
         </div>

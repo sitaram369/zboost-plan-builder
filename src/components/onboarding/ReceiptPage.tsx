@@ -118,7 +118,7 @@ export function ReceiptPage({
         key: orderData.keyId,
         amount: advancePayment * 100,
         currency: "INR",
-        name: "Zboost",
+        name: "AIZBOOSTR",
         description: "Advance Payment for Marketing Plan",
         order_id: orderData.orderId,
         prefill: {
@@ -180,7 +180,7 @@ export function ReceiptPage({
   const handleDownloadReceipt = () => {
     const receiptHtml = `
       <!DOCTYPE html>
-      <html><head><meta charset="utf-8"><title>Zboost Receipt</title>
+      <html><head><meta charset="utf-8"><title>AIZBOOSTR Receipt</title>
       <style>
         body { font-family: Arial; max-width: 800px; margin: 40px auto; padding: 20px; }
         h1 { color: #22c55e; text-align: center; }
@@ -189,7 +189,7 @@ export function ReceiptPage({
         .brand-info { background: #f0fdf4; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
       </style></head>
       <body>
-        <h1>Zboost</h1>
+        <h1>AIZBOOSTR</h1>
         <p style="text-align:center;"><strong>WE ARE THE BRAND BUILDING BRAND.</strong></p>
         <div class="brand-info">
           <h3>Brand Details</h3>
@@ -216,7 +216,7 @@ export function ReceiptPage({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `zboost-receipt-${Date.now()}.html`;
+    a.download = `aizboostr-receipt-${Date.now()}.html`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success("Receipt downloaded!");
