@@ -10,6 +10,7 @@ export interface PlanOption {
   quantityLabel?: string;
   disabled?: boolean;
   excludeFromDiscount?: boolean;
+  hasLanguageOption?: boolean;
 }
 
 export interface PlanSection {
