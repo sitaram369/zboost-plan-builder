@@ -20,7 +20,7 @@ interface PlanSelectionStepProps {
 export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initialDiscount = 0 }: PlanSelectionStepProps) {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>(initialOptions);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const [discount, setDiscount] = useState<number>(initialDiscount);
+  const [discount, setDiscount] = useState<number>(Math.min(initialDiscount, 10));
 
   const handleOptionToggle = (
     sectionId: string,
