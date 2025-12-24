@@ -19,7 +19,7 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
     .reduce((sum, opt) => sum + opt.price, 0);
   const discountAmount = (discountableAmount * discount) / 100;
   const total = subtotal - discountAmount;
-  const advancePayment = total * 0.3;
+  const advancePayment = total * 0.5;
 
   const handleDownload = () => {
     const receiptContent = `
@@ -74,7 +74,7 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
           <div class="advance">
             <h2>Advance Payment Required</h2>
             <h1>₹${advancePayment.toLocaleString("en-IN")}</h1>
-            <p>Pay 30% of the total amount as advance to get started</p>
+            <p>Pay 50% of the total amount as advance to get started</p>
           </div>
           <div class="terms" style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #22c55e;">
             <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold;">Terms & Conditions</h3>
@@ -107,7 +107,7 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
   const handleShare = async () => {
     const shareText = `AIZBOOSTR Custom Plan\n\nWE ARE THE BRAND BUILDING BRAND.\n\n${selectedOptions.map(opt => 
       `✓ ${opt.name}${opt.quantity ? ` (${opt.quantity.toLocaleString("en-IN")} views)` : ''} - ₹${opt.price.toLocaleString("en-IN")}`
-    ).join('\n')}\n\nSubtotal: ₹${subtotal.toLocaleString("en-IN")}${discount > 0 ? `\nDiscount (${discount}%): -₹${discountAmount.toLocaleString("en-IN")}` : ''}\n\nTotal: ₹${total.toLocaleString("en-IN")}\n\nAdvance Payment (20%): ₹${advancePayment.toLocaleString("en-IN")}`;
+    ).join('\n')}\n\nSubtotal: ₹${subtotal.toLocaleString("en-IN")}${discount > 0 ? `\nDiscount (${discount}%): -₹${discountAmount.toLocaleString("en-IN")}` : ''}\n\nTotal: ₹${total.toLocaleString("en-IN")}\n\nAdvance Payment (50%): ₹${advancePayment.toLocaleString("en-IN")}`;
 
     if (navigator.share) {
       try {
@@ -203,7 +203,7 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
                 ₹{advancePayment.toLocaleString("en-IN")}
               </div>
               <p className="text-accent-foreground/90">
-                Pay 30% of the total amount as advance to get started
+                Pay 50% of the total amount as advance to get started
               </p>
             </div>
           </div>

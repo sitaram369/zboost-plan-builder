@@ -68,7 +68,7 @@ export function ReceiptPage({
     .reduce((sum, opt) => sum + opt.price, 0);
   const discountAmount = (discountableAmount * discount) / 100;
   const total = subtotal - discountAmount;
-  const advancePayment = Math.round(total * 0.3);
+  const advancePayment = Math.round(total * 0.5);
 
   const loadRazorpayScript = (): Promise<boolean> => {
     return new Promise((resolve) => {
@@ -208,7 +208,7 @@ export function ReceiptPage({
         `).join('')}
         <div class="total">
           <div style="display:flex;justify-content:space-between;"><span>Total</span><span>₹${total.toLocaleString("en-IN")}</span></div>
-          <div style="display:flex;justify-content:space-between;margin-top:10px;color:#22c55e;"><span>Advance Paid (30%)</span><span>₹${advancePayment.toLocaleString("en-IN")}</span></div>
+          <div style="display:flex;justify-content:space-between;margin-top:10px;color:#22c55e;"><span>Advance Paid (50%)</span><span>₹${advancePayment.toLocaleString("en-IN")}</span></div>
         </div>
       </body></html>
     `;
@@ -315,12 +315,12 @@ export function ReceiptPage({
         <Card className="p-6 shadow-strong border-border/50 h-fit">
           <h3 className="text-xl font-display font-bold mb-4">Payment</h3>
           <div className="p-4 rounded-lg gradient-accent text-accent-foreground mb-4">
-            <p className="text-sm mb-1">Advance (30%)</p>
+            <p className="text-sm mb-1">Advance (50%)</p>
             <p className="text-3xl font-bold">₹{advancePayment.toLocaleString("en-IN")}</p>
           </div>
           <ul className="text-sm text-muted-foreground space-y-2 mb-6">
-            <li>• 30% advance to start work</li>
-            <li>• 70% after completion</li>
+            <li>• 50% advance to start work</li>
+            <li>• 50% after completion</li>
             <li>• Secure Razorpay payment</li>
           </ul>
           <Button

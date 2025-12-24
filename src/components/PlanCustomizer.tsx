@@ -76,7 +76,7 @@ export function PlanCustomizer() {
 
   const handleDiscountChange = (value: string) => {
     const numValue = parseFloat(value);
-    if (numValue >= 0 && numValue <= 20) {
+    if (numValue >= 0 && numValue <= 10) {
       setDiscount(numValue);
     }
   };
@@ -238,7 +238,7 @@ export function PlanCustomizer() {
             <Slider
               id="discount"
               min={0}
-              max={20}
+              max={10}
               step={0.5}
               value={[discount]}
               onValueChange={(value) => handleDiscountChange(value[0].toString())}
@@ -246,7 +246,7 @@ export function PlanCustomizer() {
             />
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>0%</span>
-              <span>20%</span>
+              <span>10%</span>
             </div>
           </div>
           <div className="flex-1 text-right">
