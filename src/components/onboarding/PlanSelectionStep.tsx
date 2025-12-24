@@ -148,7 +148,7 @@ export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initial
               <Label className="font-medium">Discount</Label>
               <span className="text-lg font-semibold text-accent">{discount}%</span>
             </div>
-            <Slider min={0} max={20} step={0.5} value={[discount]} onValueChange={(v) => setDiscount(v[0])} />
+            <Slider min={0} max={10} step={0.5} value={[discount]} onValueChange={(v) => setDiscount(v[0])} />
           </div>
           <div className="flex-1 text-right">
             <div className="text-sm text-muted-foreground">Total</div>
