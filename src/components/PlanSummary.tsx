@@ -27,7 +27,7 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
       <html>
         <head>
           <meta charset="utf-8">
-          <title>Zboost Plan Receipt</title>
+          <title>AIZBOOSTR Plan Receipt</title>
           <style>
             body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; color: #000; }
             h1 { color: #22c55e; text-align: center; font-size: 36px; margin: 10px 0; }
@@ -42,7 +42,7 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
         </head>
         <body>
           <div class="header">
-            <h1>Zboost</h1>
+            <h1>AIZBOOSTR</h1>
             <p><strong>WE ARE THE BRAND BUILDING BRAND.</strong></p>
             <p>Custom Plan Receipt</p>
           </div>
@@ -92,7 +92,7 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `zboost-plan-receipt-${Date.now()}.html`;
+    a.download = `aizboostr-plan-receipt-${Date.now()}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -105,14 +105,14 @@ export function PlanSummary({ selectedOptions, discount, onBack }: PlanSummaryPr
   };
 
   const handleShare = async () => {
-    const shareText = `Zboost Custom Plan\n\nWE ARE THE BRAND BUILDING BRAND.\n\n${selectedOptions.map(opt => 
+    const shareText = `AIZBOOSTR Custom Plan\n\nWE ARE THE BRAND BUILDING BRAND.\n\n${selectedOptions.map(opt => 
       `✓ ${opt.name}${opt.quantity ? ` (${opt.quantity.toLocaleString("en-IN")} views)` : ''} - ₹${opt.price.toLocaleString("en-IN")}`
     ).join('\n')}\n\nSubtotal: ₹${subtotal.toLocaleString("en-IN")}${discount > 0 ? `\nDiscount (${discount}%): -₹${discountAmount.toLocaleString("en-IN")}` : ''}\n\nTotal: ₹${total.toLocaleString("en-IN")}\n\nAdvance Payment (20%): ₹${advancePayment.toLocaleString("en-IN")}`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'My Zboost Custom Plan',
+          title: 'My AIZBOOSTR Custom Plan',
           text: shareText,
         });
         toast({
