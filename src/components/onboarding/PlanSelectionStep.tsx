@@ -44,6 +44,11 @@ export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initial
   const [addOnDialogOpen, setAddOnDialogOpen] = useState(false);
   const [currentPlanForAddOn, setCurrentPlanForAddOn] = useState<string | null>(null);
   const [planTab, setPlanTab] = useState<string>("fixed");
+  const [fixedPlanViews, setFixedPlanViews] = useState<Record<string, number>>({
+    regular: 5000,
+    premium: 5000,
+    "pro-premium": 5000,
+  });
 
   const handleOptionToggle = (
     sectionId: string,
@@ -121,6 +126,30 @@ export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initial
     return selectedOptions.some((opt) => opt.sectionId === sectionId && opt.optionId === optionId);
   };
 
+  const calculateFixedPlanPrice = (planId: string, basePrice: number): number => {
+    const currentViews = fixedPlanViews[planId] || 5000;
+    const extraViews = currentViews - 5000;
+    return basePrice + extraViews; // ₹1 per extra view
+  };
+
+  const handleFixedPlanViewsChange = (planId: string, views: number) => {
+    const newViews = Math.max(5000, views); // Ensure minimum 5000
+    setFixedPlanViews(prev => ({ ...prev, [planId]: newViews }));
+    
+    // Update selected option price if this plan is selected
+    if (selectedFixedPlan === planId) {
+      const plan = fixedPlans.find(p => p.id === planId);
+      if (plan) {
+        const newPrice = calculateFixedPlanPrice(planId, plan.price);
+        setSelectedOptions(prev => prev.map(opt => 
+          opt.isFixedPlan && opt.fixedPlanId === planId 
+            ? { ...opt, price: newPrice }
+            : opt
+        ));
+      }
+    }
+  };
+
   const handleFixedPlanSelect = (planId: string) => {
     const plan = fixedPlans.find(p => p.id === planId);
     if (!plan) return;
@@ -135,11 +164,15 @@ export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initial
     } else {
       // Select new plan
       setSelectedFixedPlan(planId);
+      const currentViews = fixedPlanViews[planId] || 5000;
+      const extraViews = currentViews - 5000;
+      const adjustedPrice = plan.price + extraViews;
+      
       const planOption: SelectedOption = {
         sectionId: "fixed-plans",
         optionId: planId,
         name: plan.name,
-        price: plan.price,
+        price: adjustedPrice,
         isFixedPlan: true,
         fixedPlanId: planId,
         excludeFromDiscount: plan.excludeFromDiscount,
@@ -193,68 +226,110 @@ export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initial
         {/* Fixed Plans Tab */}
         <TabsContent value="fixed" className="space-y-6">
           <div className="grid md:grid-cols-3 gap-6">
-            {fixedPlans.map((plan) => (
-              <Card 
-                key={plan.id}
-                className={`p-6 shadow-elegant border-2 transition-all cursor-pointer relative ${
-                  selectedFixedPlan === plan.id 
-                    ? "border-accent bg-accent/5" 
-                    : "border-border/50 hover:border-border"
-                }`}
-                onClick={() => handleFixedPlanSelect(plan.id)}
-              >
-                {plan.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                      plan.id === "premium" ? "bg-accent text-accent-foreground" : "bg-secondary text-secondary-foreground"
-                    }`}>
-                      {plan.badge}
-                    </span>
-                  </div>
-                )}
-                
-                <div className="text-center mb-4 pt-2">
-                  <div className={`w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-3 ${
-                    selectedFixedPlan === plan.id ? "bg-accent text-accent-foreground" : "bg-secondary"
-                  }`}>
-                    {getPlanIcon(plan.id)}
-                  </div>
-                  <h3 className="text-xl font-display font-bold">{plan.name}</h3>
-                  <p className="text-3xl font-bold mt-2">₹{plan.price.toLocaleString("en-IN")}</p>
-                  <p className="text-sm text-muted-foreground">{plan.description}</p>
-                  {plan.excludeFromDiscount && (
-                    <p className="text-xs text-accent mt-1">No discount applicable</p>
-                  )}
-                </div>
-
-                <ul className="space-y-3 mb-4">
-                  {plan.services.map((service, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm">
-                      <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-                      <div>
-                        <span className="font-medium">{service.name}</span>
-                        {service.details && (
-                          <p className="text-xs text-muted-foreground">{service.details}</p>
-                        )}
-                        <p className="text-xs text-accent">₹{service.price.toLocaleString("en-IN")}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button 
-                  variant="outline" 
-                  className="w-full border-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openAddOnDialog(plan.id);
-                  }}
+            {fixedPlans.map((plan) => {
+              const currentViews = fixedPlanViews[plan.id] || 5000;
+              const extraViews = currentViews - 5000;
+              const adjustedPrice = plan.price + extraViews;
+              
+              return (
+                <Card 
+                  key={plan.id}
+                  className={`p-6 shadow-elegant border-2 transition-all cursor-pointer relative ${
+                    selectedFixedPlan === plan.id 
+                      ? "border-accent bg-accent/5" 
+                      : "border-border/50 hover:border-border"
+                  }`}
+                  onClick={() => handleFixedPlanSelect(plan.id)}
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add On
-                </Button>
-              </Card>
-            ))}
+                  {plan.badge && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                        plan.id === "premium" ? "bg-accent text-accent-foreground" : "bg-secondary text-secondary-foreground"
+                      }`}>
+                        {plan.badge}
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div className="text-center mb-4 pt-2">
+                    <div className={`w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-3 ${
+                      selectedFixedPlan === plan.id ? "bg-accent text-accent-foreground" : "bg-secondary"
+                    }`}>
+                      {getPlanIcon(plan.id)}
+                    </div>
+                    <h3 className="text-xl font-display font-bold">{plan.name}</h3>
+                    <p className="text-3xl font-bold mt-2">₹{adjustedPrice.toLocaleString("en-IN")}</p>
+                    <p className="text-sm text-muted-foreground">{plan.description}</p>
+                    {plan.excludeFromDiscount && (
+                      <p className="text-xs text-accent mt-1">No discount applicable</p>
+                    )}
+                  </div>
+
+                  <ul className="space-y-3 mb-4">
+                    {plan.services.map((service, idx) => {
+                      const isStatusService = service.name.includes("Views") && service.name.includes("Status");
+                      
+                      if (isStatusService) {
+                        return (
+                          <li key={idx} className="text-sm">
+                            <div className="flex items-start gap-2">
+                              <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                              <div className="flex-1">
+                                <span className="font-medium">{currentViews.toLocaleString("en-IN")} Views (Status Marketing)</span>
+                                <p className="text-xs text-muted-foreground">Adjustable (min 5000) - ₹1/view</p>
+                                <p className="text-xs text-accent">₹{currentViews.toLocaleString("en-IN")}</p>
+                              </div>
+                            </div>
+                            <div 
+                              className="mt-2 px-2"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <Slider
+                                min={5000}
+                                max={100000}
+                                step={1000}
+                                value={[currentViews]}
+                                onValueChange={(v) => handleFixedPlanViewsChange(plan.id, v[0])}
+                                className="cursor-pointer"
+                              />
+                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                                <span>5,000</span>
+                                <span>1,00,000</span>
+                              </div>
+                            </div>
+                          </li>
+                        );
+                      }
+                      
+                      return (
+                        <li key={idx} className="flex items-start gap-2 text-sm">
+                          <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                          <div>
+                            <span className="font-medium">{service.name}</span>
+                            {service.details && (
+                              <p className="text-xs text-muted-foreground">{service.details}</p>
+                            )}
+                            <p className="text-xs text-accent">₹{service.price.toLocaleString("en-IN")}</p>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openAddOnDialog(plan.id);
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add On
+                  </Button>
+                </Card>
+              );
+            })}
           </div>
         </TabsContent>
 
@@ -264,13 +339,85 @@ export function PlanSelectionStep({ onNext, onBack, initialOptions = [], initial
             <Card key={section.id} className="p-6 shadow-elegant border-border/50">
               <h3 className="text-xl font-display font-bold mb-4">{section.title}</h3>
               <div className="space-y-3">
-                {section.options.map((option) => {
+              {section.options.map((option) => {
                   const isSelected = isOptionSelected(section.id, option.id);
                   const quantityKey = `${section.id}-${option.id}`;
                   const currentQuantity = quantities[quantityKey] || (option.minQuantity || 5000);
                   const calculatedPrice = option.isQuantityBased && option.pricePerUnit
                     ? currentQuantity * option.pricePerUnit
                     : option.price;
+
+                  // Special handling for WhatsApp Status Marketing with slider
+                  if (option.isQuantityBased && option.id === "whatsapp-status") {
+                    return (
+                      <div
+                        key={option.id}
+                        className={`p-4 rounded-lg border-2 transition-all ${
+                          isSelected ? "border-accent bg-accent/5" : "border-border/50 hover:border-border"
+                        }`}
+                      >
+                        <div 
+                          className="flex items-center justify-between cursor-pointer"
+                          onClick={() => handleOptionToggle(
+                            section.id, 
+                            option.id, 
+                            option.name, 
+                            calculatedPrice, 
+                            true, 
+                            currentQuantity, 
+                            option.excludeFromDiscount,
+                            false
+                          )}
+                        >
+                          <div className="flex items-center gap-3">
+                            <Checkbox checked={isSelected} />
+                            <div>
+                              <Label className="cursor-pointer font-medium">{option.name}</Label>
+                              {option.description && <p className="text-sm text-muted-foreground">{option.description}</p>}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="font-semibold">₹{calculatedPrice.toLocaleString("en-IN")}</span>
+                            <p className="text-xs text-muted-foreground">{currentQuantity.toLocaleString("en-IN")} views</p>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-4 px-2">
+                          <div className="flex justify-between items-center mb-2">
+                            <Label className="text-sm">Select Views</Label>
+                            <span className="text-sm font-semibold text-accent">{currentQuantity.toLocaleString("en-IN")} views</span>
+                          </div>
+                          <Slider
+                            min={1000}
+                            max={100000}
+                            step={1000}
+                            value={[currentQuantity]}
+                            onValueChange={(v) => {
+                              handleQuantityChange(section.id, option.id, v[0]);
+                              // Auto-select if not selected
+                              if (!isSelected) {
+                                handleOptionToggle(
+                                  section.id, 
+                                  option.id, 
+                                  option.name, 
+                                  v[0], 
+                                  true, 
+                                  v[0], 
+                                  option.excludeFromDiscount,
+                                  false
+                                );
+                              }
+                            }}
+                            className="cursor-pointer"
+                          />
+                          <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                            <span>1,000</span>
+                            <span>1,00,000</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
 
                   return (
                     <div
