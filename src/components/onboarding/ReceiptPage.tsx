@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Check, CreditCard, Loader2, Clock, Download } from "lucide-react";
+import { ArrowLeft, Check, CreditCard, Loader2, Clock, Download, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SelectedOption } from "@/types/plan";
@@ -7,6 +7,14 @@ import { BusinessDetails, SurveyAnswers } from "@/types/onboarding";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import paymentQR from "@/assets/payment-qr.jpeg";
 
 interface ReceiptPageProps {
   selectedOptions: SelectedOption[];
@@ -32,6 +40,7 @@ const getWorkEstimate = (optionId: string): string => {
     "twitter": "1-2 days",
     "youtube": "2-3 days",
     "gmb": "2-3 days",
+    "gmb-management": "Ongoing monthly",
     "basic-landing": "5-7 days",
     "landing-domain": "5-7 days",
     "advanced-website": "15-20 days",
@@ -47,6 +56,12 @@ const getWorkEstimate = (optionId: string): string => {
     "boost-pack-4": "Weekly schedule",
     "whatsapp-broadcast": "Setup: 2-3 days",
     "email-marketing": "Setup: 3-5 days",
+    "whatsapp-status": "Setup: 1-2 days",
+    "whatsapp-chatbot": "Setup: 3-5 days",
+    "meta-google-boost": "Starts within 48hrs",
+    "regular": "Work starts within 48hrs",
+    "premium": "Work starts within 48hrs",
+    "pro-premium": "Work starts within 48hrs",
   };
   return estimates[optionId] || "3-5 days";
 };
@@ -61,6 +76,7 @@ export function ReceiptPage({
 }: ReceiptPageProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
+  const [qrDialogOpen, setQrDialogOpen] = useState(false);
 
   const subtotal = selectedOptions.reduce((sum, opt) => sum + opt.price, 0);
   const discountableAmount = selectedOptions
@@ -177,6 +193,10 @@ export function ReceiptPage({
     }
   };
 
+  const handleQRPayment = () => {
+    setQrDialogOpen(true);
+  };
+
   const handleDownloadReceipt = () => {
     const receiptHtml = `
       <!DOCTYPE html>
@@ -208,7 +228,13 @@ export function ReceiptPage({
         `).join('')}
         <div class="total">
           <div style="display:flex;justify-content:space-between;"><span>Total</span><span>₹${total.toLocaleString("en-IN")}</span></div>
-          <div style="display:flex;justify-content:space-between;margin-top:10px;color:#22c55e;"><span>Advance Paid (50%)</span><span>₹${advancePayment.toLocaleString("en-IN")}</span></div>
+          <div style="display:flex;justify-content:space-between;margin-top:10px;color:#22c55e;"><span>Advance Required (50%)</span><span>₹${advancePayment.toLocaleString("en-IN")}</span></div>
+        </div>
+        <div style="margin-top:30px;padding:20px;border:1px solid #ddd;border-radius:8px;">
+          <h4>Payment Information</h4>
+          <p><strong>GPay Number:</strong> 9326008948</p>
+          <p><strong>UPI ID:</strong> sp5195389@okhdfcbank</p>
+          <p><strong>Name:</strong> AYUSH PANDEY</p>
         </div>
       </body></html>
     `;
@@ -297,7 +323,7 @@ export function ReceiptPage({
               <span className="text-muted-foreground">Subtotal</span>
               <span className="font-semibold">₹{subtotal.toLocaleString("en-IN")}</span>
             </div>
-            {discount > 0 && (
+            {discount > 0 && discountAmount > 0 && (
               <div className="flex justify-between text-accent">
                 <span>Discount ({discount}%)</span>
                 <span>-₹{discountAmount.toLocaleString("en-IN")}</span>
@@ -321,21 +347,74 @@ export function ReceiptPage({
           <ul className="text-sm text-muted-foreground space-y-2 mb-6">
             <li>• 50% advance to start work</li>
             <li>• 50% after completion</li>
-            <li>• Secure Razorpay payment</li>
+            <li>• Secure payment options</li>
           </ul>
-          <Button
-            onClick={handlePayment}
-            disabled={isProcessing}
-            className="w-full gradient-accent text-accent-foreground font-semibold py-6 text-lg"
+          
+          <div className="space-y-3">
+            <Button
+              onClick={handlePayment}
+              disabled={isProcessing}
+              className="w-full gradient-accent text-accent-foreground font-semibold py-6 text-lg"
+            >
+              {isProcessing ? (
+                <><Loader2 className="w-5 h-5 mr-2 animate-spin" />Processing...</>
+              ) : (
+                <><CreditCard className="w-5 h-5 mr-2" />Pay with Razorpay</>
+              )}
+            </Button>
+
+            <Button
+              onClick={handleQRPayment}
+              variant="outline"
+              className="w-full border-2 font-semibold py-6 text-lg"
+            >
+              <QrCode className="w-5 h-5 mr-2" />
+              Pay with UPI/QR
+            </Button>
+          </div>
+
+          <Button 
+            onClick={handleDownloadReceipt} 
+            variant="ghost" 
+            className="w-full mt-4"
           >
-            {isProcessing ? (
-              <><Loader2 className="w-5 h-5 mr-2 animate-spin" />Processing...</>
-            ) : (
-              <><CreditCard className="w-5 h-5 mr-2" />Pay ₹{advancePayment.toLocaleString("en-IN")}</>
-            )}
+            <Download className="w-4 h-4 mr-2" />
+            Download Receipt
           </Button>
         </Card>
       </div>
+
+      {/* QR Payment Dialog */}
+      <Dialog open={qrDialogOpen} onOpenChange={setQrDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">Scan & Pay</DialogTitle>
+            <DialogDescription className="text-center">
+              Scan the QR code with any UPI app to pay ₹{advancePayment.toLocaleString("en-IN")}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col items-center py-4">
+            <div className="bg-white p-4 rounded-xl shadow-lg">
+              <img 
+                src={paymentQR} 
+                alt="Payment QR Code" 
+                className="w-64 h-64 object-contain"
+              />
+            </div>
+            <div className="mt-6 text-center space-y-2">
+              <p className="text-lg font-semibold">AYUSH PANDEY</p>
+              <p className="text-sm text-muted-foreground">UPI ID: sp5195389@okhdfcbank</p>
+              <div className="flex items-center justify-center gap-2 bg-secondary/50 px-4 py-2 rounded-lg mt-4">
+                <span className="text-sm font-medium">GPay Number:</span>
+                <span className="text-lg font-bold">9326008948</span>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-4 text-center">
+              After payment, please share the screenshot on WhatsApp to confirm your order.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Terms */}
       <Card className="mt-6 p-4 shadow-elegant border-border/50">

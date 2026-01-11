@@ -5,13 +5,13 @@ export const planSections: PlanSection[] = [
     id: "digital-footprint",
     title: "Digital Footprint Setup",
     options: [
-      { id: "instagram", name: "Instagram Setup", price: 500, description: "Profile optimization, bio setup, highlights, and initial content strategy" },
-      { id: "facebook", name: "Facebook Setup", price: 500, description: "Page creation, cover design, about section, and business info setup" },
-      { id: "linkedin", name: "LinkedIn Setup", price: 500, description: "Company page creation, banner design, and professional profile optimization" },
-      { id: "twitter", name: "Twitter/X Setup", price: 500, description: "Profile setup, header design, bio optimization, and pinned tweet strategy" },
-      { id: "youtube", name: "YouTube Setup", price: 500, description: "Channel creation, banner design, about section, and initial video optimization" },
+      { id: "instagram", name: "Instagram Setup & Management (Monthly)", price: 1000, description: "Profile optimization, bio setup, highlights, content strategy, and monthly management" },
+      { id: "facebook", name: "Facebook Setup & Management (Monthly)", price: 1000, description: "Page creation, cover design, about section, business info setup, and monthly management" },
+      { id: "linkedin", name: "LinkedIn Setup & Management (Monthly)", price: 1000, description: "Company page creation, banner design, professional profile optimization, and monthly management" },
+      { id: "twitter", name: "Twitter/X Setup & Management (Monthly)", price: 1000, description: "Profile setup, header design, bio optimization, pinned tweet strategy, and monthly management" },
+      { id: "youtube", name: "YouTube Setup & Management (Monthly)", price: 1000, description: "Channel creation, banner design, about section, video optimization, and monthly management" },
       { id: "gmb", name: "Google My Business Setup", price: 2500, description: "Complete GMB profile setup, photos, categories, and local SEO optimization" },
-      { id: "gmb-management", name: "Google My Business Management", price: 5000, description: "Monthly GMB management, review responses, posts, and analytics reporting" },
+      { id: "gmb-management", name: "Google My Business Management", price: 7000, description: "Monthly GMB management with updates, local SEO, rating management, and review responses" },
       { id: "basic-landing", name: "Basic Landing Page", price: 5000, description: "Single page website with contact form, responsive design, and basic SEO" },
       { id: "landing-domain", name: "Landing Page + Domain", price: 7500, excludeFromDiscount: true, description: "Landing page with custom domain registration and 1-year hosting" },
       { id: "advanced-website", name: "Advanced Website", price: 18000, description: "Multi-page website with CMS, blog, SEO optimization, and analytics integration" },
@@ -42,15 +42,17 @@ export const planSections: PlanSection[] = [
       { 
         id: "whatsapp-status", 
         name: "WhatsApp Status Marketing Software (U.S.P)", 
-        price: 1000, 
+        price: 5000, 
         isQuantityBased: true,
         pricePerUnit: 1,
-        minQuantity: 1000,
+        minQuantity: 5000,
         maxQuantity: 100000,
         quantityLabel: "views",
-        description: "₹1 per view - Automated WhatsApp status marketing to reach local audiences",
-        disabled: true
+        description: "₹1 per view (minimum 5000 views) - Automated WhatsApp status marketing. No discount applicable.",
+        excludeFromDiscount: true
       },
+      { id: "whatsapp-chatbot", name: "WhatsApp Chat Bot for Your Brand", price: 7000, description: "Automated chatbot for WhatsApp to handle customer queries 24/7" },
+      { id: "meta-google-boost", name: "Meta & Google Boosting", price: 5000, description: "Paid advertising on Meta (Facebook/Instagram) and Google for brand visibility" },
     ],
   },
   {
@@ -61,6 +63,68 @@ export const planSections: PlanSection[] = [
       { id: "crm-setup", name: "CRM Setup (Pipeline, Tagging, Automation)", price: 0, description: "Custom pricing - Complete CRM setup with sales pipeline and automation", disabled: true },
       { id: "workflow-automation", name: "Workflow Automation (Chatbot, Appointments, Payments)", price: 0, description: "Custom pricing - End-to-end workflow automation for your business", disabled: true },
       { id: "maintenance", name: "Monthly Automation Maintenance", price: 0, description: "Custom pricing - Ongoing support and optimization of automation systems", disabled: true },
+    ],
+  },
+];
+
+// Fixed Plans Data
+export interface FixedPlan {
+  id: string;
+  name: string;
+  price: number;
+  badge?: string;
+  description: string;
+  services: {
+    name: string;
+    price: number;
+    details?: string;
+  }[];
+  excludeFromDiscount: boolean;
+}
+
+export const fixedPlans: FixedPlan[] = [
+  {
+    id: "regular",
+    name: "Regular Plan",
+    price: 14000,
+    badge: "Monthly",
+    description: "Perfect for businesses starting their digital journey",
+    excludeFromDiscount: true,
+    services: [
+      { name: "3 Social Media Setup & Management", price: 3000, details: "Instagram, Facebook, YouTube" },
+      { name: "Google My Business Setup & Management", price: 2500, details: "Normal level setup" },
+      { name: "1 Ad Video (30 sec)", price: 3500, details: "Full customization included" },
+      { name: "5,000 Views (Status Marketing)", price: 5000, details: "One-time - ₹1 per view" },
+    ],
+  },
+  {
+    id: "premium",
+    name: "Premium Plan",
+    price: 25000,
+    badge: "Popular",
+    description: "Complete package for growing brands",
+    excludeFromDiscount: false,
+    services: [
+      { name: "Social Media Management", price: 3000, details: "All platforms managed" },
+      { name: "Google My Business Setup & Management", price: 7000, details: "Updates, Local SEO, Rating management" },
+      { name: "Pack of 4 Ad Videos", price: 10000, details: "Full customization included" },
+      { name: "5,000 Views (Status Marketing)", price: 5000, details: "Customizable (min 5000 views) - ₹1/view" },
+    ],
+  },
+  {
+    id: "pro-premium",
+    name: "Pro Premium Plan",
+    price: 37000,
+    badge: "Best Value",
+    description: "Ultimate solution for serious growth",
+    excludeFromDiscount: false,
+    services: [
+      { name: "3 Social Media Management", price: 3000, details: "All major platforms" },
+      { name: "Google My Business Setup & Management", price: 7000, details: "Full suite management" },
+      { name: "WhatsApp Chat Bot", price: 7000, details: "24/7 automated customer support" },
+      { name: "Pack of 4 Ad Videos", price: 10000, details: "Full customization" },
+      { name: "Meta & Google Boosting", price: 5000, details: "Paid ads management" },
+      { name: "5,000 Views (Status Marketing)", price: 5000, details: "WhatsApp status marketing" },
     ],
   },
 ];

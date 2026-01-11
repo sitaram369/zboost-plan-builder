@@ -26,9 +26,16 @@ export interface SelectedOption {
   price: number;
   quantity?: number;
   excludeFromDiscount?: boolean;
+  isFixedPlan?: boolean;
+  fixedPlanId?: string;
 }
 
 export interface CustomInput {
   id: string;
   value: number;
+}
+
+export interface FixedPlanAddOn {
+  planId: string;
+  addOns: SelectedOption[];
 }
