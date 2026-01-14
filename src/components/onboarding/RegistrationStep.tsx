@@ -205,7 +205,7 @@ export function RegistrationStep({ onNext, onSkip, initialData }: RegistrationSt
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number *</Label>
                 <Input
@@ -225,6 +225,7 @@ export function RegistrationStep({ onNext, onSkip, initialData }: RegistrationSt
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="your@email.com"
+                  className="w-full"
                   required
                 />
               </div>
