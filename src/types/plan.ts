@@ -11,6 +11,7 @@ export interface PlanOption {
   disabled?: boolean;
   excludeFromDiscount?: boolean;
   hasLanguageOption?: boolean;
+  languageExtraPrice?: number;
 }
 
 export interface PlanSection {
@@ -28,6 +29,7 @@ export interface SelectedOption {
   excludeFromDiscount?: boolean;
   isFixedPlan?: boolean;
   fixedPlanId?: string;
+  planAddOns?: { id: string; name: string; price: number }[];
 }
 
 export interface CustomInput {

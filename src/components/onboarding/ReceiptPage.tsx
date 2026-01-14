@@ -3,7 +3,7 @@ import { ArrowLeft, Check, CreditCard, Loader2, Clock, Download, QrCode } from "
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SelectedOption } from "@/types/plan";
-import { BusinessDetails, SurveyAnswers } from "@/types/onboarding";
+import { BusinessDetails } from "@/types/onboarding";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,7 +20,6 @@ interface ReceiptPageProps {
   selectedOptions: SelectedOption[];
   discount: number;
   businessDetails: BusinessDetails;
-  surveyAnswers: SurveyAnswers;
   onBack: () => void;
   userEmail?: string;
 }
@@ -55,13 +54,17 @@ const getWorkEstimate = (optionId: string): string => {
     "one-week-boost": "Starts within 24hrs",
     "boost-pack-4": "Weekly schedule",
     "whatsapp-broadcast": "Setup: 2-3 days",
-    "email-marketing": "Setup: 3-5 days",
     "whatsapp-status": "Setup: 1-2 days",
     "whatsapp-chatbot": "Setup: 3-5 days",
     "meta-google-boost": "Starts within 48hrs",
     "regular": "Work starts within 48hrs",
     "premium": "Work starts within 48hrs",
     "pro-premium": "Work starts within 48hrs",
+    "double-discount": "15-20 days",
+    "content-boost": "20-25 days",
+    "30-days-15sec": "30 days",
+    "30-days-30sec": "30 days",
+    "online-store": "Work starts within 48hrs",
   };
   return estimates[optionId] || "3-5 days";
 };
@@ -70,7 +73,6 @@ export function ReceiptPage({
   selectedOptions,
   discount,
   businessDetails,
-  surveyAnswers,
   onBack,
   userEmail,
 }: ReceiptPageProps) {
@@ -152,7 +154,6 @@ export function ReceiptPage({
                 razorpay_signature: response.razorpay_signature,
                 orderDetails: {
                   businessDetails,
-                  surveyAnswers,
                   selectedOptions,
                   discount,
                   subtotal,
@@ -285,11 +286,11 @@ export function ReceiptPage({
           {/* Brand Info */}
           <div className="bg-accent/5 border border-accent/20 rounded-lg p-4 mb-6">
             <h3 className="font-semibold mb-2">Brand Information</h3>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <p><span className="text-muted-foreground">Business:</span> {businessDetails.businessName}</p>
-              <p><span className="text-muted-foreground">Email:</span> {businessDetails.email}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+              <p className="truncate"><span className="text-muted-foreground">Business:</span> {businessDetails.businessName}</p>
+              <p className="break-all"><span className="text-muted-foreground">Email:</span> {businessDetails.email}</p>
               <p><span className="text-muted-foreground">Phone:</span> {businessDetails.phone}</p>
-              {businessDetails.website && <p><span className="text-muted-foreground">Website:</span> {businessDetails.website}</p>}
+              {businessDetails.website && <p className="truncate"><span className="text-muted-foreground">Website:</span> {businessDetails.website}</p>}
             </div>
             <p className="text-sm mt-2"><span className="text-muted-foreground">About:</span> {businessDetails.brandDetails}</p>
           </div>

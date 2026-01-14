@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
-import { BusinessDetails, SurveyAnswers, OnboardingStep } from "@/types/onboarding";
+import { BusinessDetails, OnboardingStep } from "@/types/onboarding";
 import { SelectedOption } from "@/types/plan";
 import { StepIndicator } from "./StepIndicator";
 import { RegistrationStep } from "./RegistrationStep";
-import { SurveyStep } from "./SurveyStep";
 import { PlanSelectionStep } from "./PlanSelectionStep";
 import { ReceiptPage } from "./ReceiptPage";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,6 @@ import { ArrowLeft } from "lucide-react";
 
 const STEPS: { id: OnboardingStep; label: string }[] = [
   { id: "auth", label: "Register" },
-  { id: "survey", label: "Survey" },
   { id: "plan", label: "Services" },
   { id: "billing", label: "Payment" },
 ];
@@ -23,7 +21,6 @@ export function OnboardingFlow({ onClose }: { onClose: () => void }) {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [businessDetails, setBusinessDetails] = useState<BusinessDetails | null>(null);
-  const [surveyAnswers, setSurveyAnswers] = useState<SurveyAnswers | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
   const [discount, setDiscount] = useState(0);
 
@@ -45,8 +42,8 @@ export function OnboardingFlow({ onClose }: { onClose: () => void }) {
     // Check URL for step param (for Google OAuth redirect)
     const params = new URLSearchParams(window.location.search);
     const stepParam = params.get("step");
-    if (stepParam === "survey") {
-      setCurrentStep("survey");
+    if (stepParam === "plan") {
+      setCurrentStep("plan");
       // Clean up URL
       window.history.replaceState({}, "", window.location.pathname);
     }
@@ -57,11 +54,6 @@ export function OnboardingFlow({ onClose }: { onClose: () => void }) {
   const handleRegistrationNext = (data: BusinessDetails, authenticated: boolean) => {
     setBusinessDetails(data);
     setIsAuthenticated(authenticated);
-    setCurrentStep("survey");
-  };
-
-  const handleSurveyNext = (data: SurveyAnswers) => {
-    setSurveyAnswers(data);
     setCurrentStep("plan");
   };
 
@@ -72,8 +64,7 @@ export function OnboardingFlow({ onClose }: { onClose: () => void }) {
   };
 
   const handleBack = () => {
-    if (currentStep === "survey") setCurrentStep("auth");
-    else if (currentStep === "plan") setCurrentStep("survey");
+    if (currentStep === "plan") setCurrentStep("auth");
     else if (currentStep === "billing") setCurrentStep("plan");
   };
 
@@ -108,14 +99,6 @@ export function OnboardingFlow({ onClose }: { onClose: () => void }) {
           />
         )}
 
-        {currentStep === "survey" && (
-          <SurveyStep
-            onNext={handleSurveyNext}
-            onBack={handleBack}
-            initialData={surveyAnswers}
-          />
-        )}
-
         {currentStep === "plan" && (
           <PlanSelectionStep
             onNext={handlePlanNext}
@@ -125,12 +108,11 @@ export function OnboardingFlow({ onClose }: { onClose: () => void }) {
           />
         )}
 
-        {currentStep === "billing" && businessDetails && surveyAnswers && (
+        {currentStep === "billing" && businessDetails && (
           <ReceiptPage
             selectedOptions={selectedOptions}
             discount={discount}
             businessDetails={businessDetails}
-            surveyAnswers={surveyAnswers}
             onBack={handleBack}
             userEmail={user?.email || businessDetails.email}
           />

@@ -12,19 +12,20 @@ export const planSections: PlanSection[] = [
       { id: "youtube", name: "YouTube Setup & Management (Monthly)", price: 1000, description: "Channel creation, banner design, about section, video optimization, and monthly management" },
       { id: "gmb", name: "Google My Business Setup", price: 2500, description: "Complete GMB profile setup, photos, categories, and local SEO optimization" },
       { id: "gmb-management", name: "Google My Business Management", price: 7000, description: "Monthly GMB management with updates, local SEO, rating management, and review responses" },
+      { id: "whatsapp-chatbot", name: "WhatsApp Chat Bot for Your Brand", price: 7000, description: "Automated chatbot for WhatsApp to handle customer queries 24/7" },
       { id: "basic-landing", name: "Basic Landing Page", price: 5000, description: "Single page website with contact form, responsive design, and basic SEO" },
       { id: "landing-domain", name: "Landing Page + Domain", price: 7500, excludeFromDiscount: true, description: "Landing page with custom domain registration and 1-year hosting" },
       { id: "advanced-website", name: "Advanced Website", price: 18000, description: "Multi-page website with CMS, blog, SEO optimization, and analytics integration" },
       { id: "domain-hosting", name: "Domain + Hosting", price: 7000, excludeFromDiscount: true, description: "Domain registration and 1-year premium hosting with SSL certificate" },
-      { id: "mid-app", name: "Mid-Level App", price: 20000, description: "Mobile app with essential features, user auth, and basic backend integration" },
-      { id: "advanced-app", name: "Advanced App", price: 25000, description: "Full-featured mobile app with advanced backend, APIs, and premium features" },
+      { id: "mid-app", name: "Mid-Level App", price: 25000, description: "Mobile app with essential features, user auth, and basic backend integration" },
+      { id: "advanced-app", name: "Advanced App", price: 50000, description: "Full-featured mobile app with advanced backend, APIs, and premium features" },
     ],
   },
   {
     id: "content-creation",
     title: "Digital Content Creation",
     options: [
-      { id: "ad-pack-4", name: "Pack of 4 Ads (Up to 30 sec each)", price: 10000, description: "1 language included free. Additional language: ₹500 per ad", hasLanguageOption: true },
+      { id: "ad-pack-4", name: "Pack of 4 Ads (Up to 30 sec each)", price: 10000, description: "1 language included free. Additional language: ₹500 per ad (₹2000 total for pack)", hasLanguageOption: true, languageExtraPrice: 2000 },
       { id: "ad-15sec", name: "Single Ad Video (15 sec)", price: 3000, description: "1 language included free. Additional language: ₹500", hasLanguageOption: true },
       { id: "ad-30sec", name: "Single Ad Video (30 sec)", price: 3500, description: "1 language included free. Additional language: ₹500", hasLanguageOption: true },
       { id: "ad-above-30", name: "Single Ad Video (Above 30 sec)", price: 5000, description: "1 language included free. Additional language: ₹500", hasLanguageOption: true },
@@ -35,24 +36,22 @@ export const planSections: PlanSection[] = [
     id: "digital-reach",
     title: "Digital Reach",
     options: [
-      { id: "one-week-boost", name: "One-week Boost (1,000 reach)", price: 1000, excludeFromDiscount: true, description: "7-day paid promotion on social media to reach 1,000+ people" },
-      { id: "boost-pack-4", name: "Package of 4 Boosts", price: 3200, excludeFromDiscount: true, description: "4 weekly boosts at discounted price - reach 4,000+ people over a month" },
+      { id: "one-week-boost", name: "One-week Boost (1,000 reach)", price: 1000, excludeFromDiscount: true, description: "7-day paid promotion. 50% will be charged for maintenance of the boost campaign." },
+      { id: "boost-pack-4", name: "Package of 4 Boosts", price: 4000, excludeFromDiscount: true, description: "4 weekly boosts - reach 4,000+ people. 50% will be charged for maintenance of the boost campaign." },
       { id: "whatsapp-broadcast", name: "WhatsApp Broadcast", price: 5000, description: "Monthly WhatsApp broadcast campaigns to your customer list" },
-      { id: "email-marketing", name: "Email Marketing", price: 7000, description: "Monthly email campaigns with design, automation, and analytics" },
       { 
         id: "whatsapp-status", 
         name: "WhatsApp Status Marketing Software (U.S.P)", 
         price: 5000, 
         isQuantityBased: true,
         pricePerUnit: 1,
-        minQuantity: 5000,
+        minQuantity: 1000,
         maxQuantity: 100000,
         quantityLabel: "views",
-        description: "₹1 per view (minimum 5000 views) - Automated WhatsApp status marketing. No discount applicable.",
+        description: "₹1 per view (minimum 1000 views) - Automated WhatsApp status marketing. No discount applicable.",
         excludeFromDiscount: true
       },
-      { id: "whatsapp-chatbot", name: "WhatsApp Chat Bot for Your Brand", price: 7000, description: "Automated chatbot for WhatsApp to handle customer queries 24/7" },
-      { id: "meta-google-boost", name: "Meta & Google Boosting", price: 5000, description: "Paid advertising on Meta (Facebook/Instagram) and Google for brand visibility" },
+      { id: "meta-google-boost", name: "Meta & Google Boosting", price: 5000, excludeFromDiscount: true, description: "Paid advertising on Meta & Google. 50% will be charged for maintenance of the campaign." },
     ],
   },
   {
@@ -80,6 +79,11 @@ export interface FixedPlan {
     details?: string;
   }[];
   excludeFromDiscount: boolean;
+  category?: string;
+  realWorth?: number;
+  savingsPercent?: number;
+  addOnOptions?: { id: string; name: string; price: number }[];
+  targetAudience?: string[];
 }
 
 export const fixedPlans: FixedPlan[] = [
@@ -107,7 +111,7 @@ export const fixedPlans: FixedPlan[] = [
     services: [
       { name: "Social Media Management", price: 3000, details: "All platforms managed" },
       { name: "Google My Business Setup & Management", price: 7000, details: "Updates, Local SEO, Rating management" },
-      { name: "Pack of 4 Ad Videos", price: 10000, details: "Full customization included" },
+      { name: "Pack of 4 Ad Videos", price: 10000, details: "Full customization. +₹2000 for 2nd language" },
       { name: "5,000 Views (Status Marketing)", price: 5000, details: "Customizable (min 5000 views) - ₹1/view" },
     ],
   },
@@ -122,9 +126,99 @@ export const fixedPlans: FixedPlan[] = [
       { name: "3 Social Media Management", price: 3000, details: "All major platforms" },
       { name: "Google My Business Setup & Management", price: 7000, details: "Full suite management" },
       { name: "WhatsApp Chat Bot", price: 7000, details: "24/7 automated customer support" },
-      { name: "Pack of 4 Ad Videos", price: 10000, details: "Full customization" },
-      { name: "Meta & Google Boosting", price: 5000, details: "Paid ads management" },
+      { name: "Pack of 4 Ad Videos", price: 10000, details: "Full customization. +₹2000 for 2nd language" },
+      { name: "Meta & Google Boosting", price: 5000, details: "50% charged for campaign maintenance" },
       { name: "5,000 Views (Status Marketing)", price: 5000, details: "WhatsApp status marketing" },
+    ],
+  },
+  // Content Only Plans
+  {
+    id: "double-discount",
+    name: "Double Discount Plan",
+    price: 10000,
+    badge: "Save 55%",
+    description: "Content only - 10 videos + 5 flyers",
+    excludeFromDiscount: true,
+    realWorth: 22500,
+    savingsPercent: 55,
+    category: "content",
+    services: [
+      { name: "10 Content Videos (15 sec each)", price: 20000, details: "No customization" },
+      { name: "5 Flyers", price: 2500, details: "Basic design with initial information" },
+    ],
+  },
+  {
+    id: "content-boost",
+    name: "Content Boost Plan",
+    price: 22500,
+    badge: "Save 36%",
+    description: "Enhanced content package with social media",
+    excludeFromDiscount: true,
+    realWorth: 35000,
+    savingsPercent: 36,
+    category: "content",
+    services: [
+      { name: "10 Content Videos (30 sec each)", price: 30000, details: "No customization" },
+      { name: "5 Flyers", price: 2500, details: "Basic design with initial information" },
+      { name: "Social Media Management", price: 2500, details: "Monthly management included" },
+    ],
+  },
+  {
+    id: "30-days-15sec",
+    name: "30 Days 30 Content Plan",
+    price: 15000,
+    badge: "Save 75%",
+    description: "15 sec videos - Daily content for a month",
+    excludeFromDiscount: true,
+    realWorth: 60000,
+    savingsPercent: 75,
+    category: "content",
+    services: [
+      { name: "30 Content Videos (15 sec each)", price: 60000, details: "Daily content with content calendar" },
+    ],
+    addOnOptions: [
+      { id: "social-media-addon", name: "Social Media Management (Add-On)", price: 2500 },
+    ],
+  },
+  {
+    id: "30-days-30sec",
+    name: "30 Days 30 Content Plan (Part 2)",
+    price: 30000,
+    badge: "Save 75%",
+    description: "30 sec videos - Premium daily content",
+    excludeFromDiscount: true,
+    realWorth: 120000,
+    savingsPercent: 75,
+    category: "content",
+    services: [
+      { name: "30 Content Videos (30 sec each)", price: 120000, details: "Daily content with content calendar" },
+    ],
+    addOnOptions: [
+      { id: "social-media-addon", name: "Social Media Management (Add-On)", price: 2500 },
+    ],
+  },
+  // My Online Store Plan
+  {
+    id: "online-store",
+    name: "My Online Store Plan",
+    price: 38000,
+    badge: "E-Commerce",
+    description: "Complete online business solution",
+    excludeFromDiscount: false,
+    category: "store",
+    services: [
+      { name: "Website Development + Management + Hosting + Payment Integration", price: 15000, details: "Full e-commerce setup" },
+      { name: "Social Media Setup & Management", price: 3000, details: "All platforms" },
+      { name: "Pack of 4 Ad Videos", price: 10000, details: "Full customization" },
+      { name: "Meta & Google Ads Boosting", price: 5000, details: "50% charged for campaign management" },
+      { name: "5,000 Views (Status Marketing)", price: 5000, details: "₹1 per view" },
+    ],
+    targetAudience: [
+      "Online Store (E-commerce, Fashion)",
+      "Online Clothing Shop",
+      "Online Coaching Centre",
+      "Online Product Selling",
+      "Online Service Selling",
     ],
   },
 ];
